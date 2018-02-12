@@ -11,6 +11,16 @@ section.bio {
   padding-bottom: 10rem;
 }
 
+section.code {
+  padding-top: 1.5rem;
+  padding-bottom: 10rem;
+}
+
+section.music {
+  padding-top: 1.5rem;
+  padding-bottom: 10rem;
+}
+
 body,
 html {
   width: 100%;
@@ -82,7 +92,7 @@ h6 {
 }
 
 section {
-  padding: 8rem 0;
+  padding: 3rem 0;
 }
 
 .section-heading {

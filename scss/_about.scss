@@ -1,11 +1,21 @@
 section.about {
   background-color: whitesmoke;
-  h2{
+  h2 {
     text-align: center;
   }
 }
 
-section.bio{
+section.bio {
+  padding-top: 1.5rem;
+  padding-bottom: 10rem;
+}
+
+section.code {
+  padding-top: 1.5rem;
+  padding-bottom: 10rem;
+}
+
+section.music {
   padding-top: 1.5rem;
   padding-bottom: 10rem;
 }

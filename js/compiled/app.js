@@ -264,26 +264,30 @@ var HashChangeHandler = function () {
 
         this.account = account;
         this.history = [];
+
+        var hash = window.location.hash;
+        if (hash) {
+            this.onHashChange({
+                'originalEvent': {
+                    'newURL': window.location.href
+                }
+            });
+        }
     }
 
     _createClass(HashChangeHandler, [{
         key: 'onHashChange',
         value: function onHashChange(event) {
-            var oldUrl = event.originalEvent.oldURL;
             var newUrl = event.originalEvent.newURL;
-
-            var oldSection = oldUrl.split("#")[1];
             var newSection = newUrl.split('#')[1];
-            console.log('Old: ' + oldSection + ', New: ' + newSection);
 
             if (!this.account.canAccessTag(newSection)) {
-                newSection = 'not-found';
+                newSection = newSection ? 'not-found' : 'welcome-screen';
             }
+
             $('section').addClass('hidden');
             var className = '.' + newSection;
-            console.log(className);
             $(className).removeClass('hidden');
-
             this.history.push(newSection);
         }
     }]);
@@ -307,7 +311,6 @@ var _HashChangeHandler2 = _interopRequireDefault(_HashChangeHandler);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-    window.location.hash = "welcome-screen";
 
     var account = new _Account2.default();
     account.loginFromCookie();
@@ -331,7 +334,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     var hashChangeHandler = new _HashChangeHandler2.default(account);
-
     $(window).on('hashchange', function (ev) {
         return hashChangeHandler.onHashChange(ev);
     });

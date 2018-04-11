@@ -2,7 +2,6 @@ import Account from "./Account";
 import HashChangeHandler from "./HashChangeHandler";
 
 document.addEventListener("DOMContentLoaded", () => {
-    window.location.hash = "welcome-screen";
 
     let account = new Account();
     account.loginFromCookie();
@@ -24,7 +23,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     let hashChangeHandler = new HashChangeHandler(account);
-
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
-
 });

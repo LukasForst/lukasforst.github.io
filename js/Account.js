@@ -1,5 +1,8 @@
 import Cookies from "./Cookies";
 
+/**
+ * This class is only temporary till some backend will be developed.
+ * */
 export default class Account {
     constructor() {
         //note that this is testing state
@@ -14,10 +17,17 @@ export default class Account {
             'role': AccountRoles.UNAUTHORIZED,
             'username': 'UNAUTHORIZED'
         };
+
+        this.sitesPermissions = {
+            'band': ['band-section', 'not-found', 'welcome-screen'],
+            'fan': ['fan-section', 'not-found', 'welcome-screen'],
+            'unauthorized': ['welcome-screen', 'not-found']
+        }
     }
 
-    logout() {
-        Cookies.deleteCookie('username');
+    register(newUserName, role) {
+        this.activeUserNames[newUserName] = role;
+        this.login(newUserName);
     }
 
     loginFromCookie() {
@@ -32,48 +42,58 @@ export default class Account {
         let userRole;
         if (userName) {
             userRole = this.activeUserNames[userName];
-            if (userRole) {
-                this.currentLogedUser.role = userRole;
-                this.currentLogedUser.username = userName;
-                Cookies.setCookie('username', userName, 30);
-
-                $("#username-fill-field").text('UserName:\t' + userName);
-                $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
-                $(".user-logged").removeClass('hidden');
-                $(".user-logged-out").addClass('hidden');
-            } else {
+            if (!userRole) {
+                userName = 'unauthorized';
                 userRole = AccountRoles.WRONG_USERNAME;
             }
         } else {
+            userName = 'unauthorized';
             userRole = AccountRoles.UNAUTHORIZED;
         }
+        this._setCurrentUSsr(userRole, userName);
     }
 
-    register(newUserName, role) {
-        this.activeUserNames[newUserName] = role;
-        this.login(newUserName);
-    }
-
-    proceedToRolePage(){
+    proceedToRolePage() {
         this._showPage(this.currentLogedUser.role);
+    }
+
+
+    logout() {
+        Cookies.deleteCookie('username');
+    }
+
+    canAccessTag(tag) {
+        let role = this.currentLogedUser.role;
+        let possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
+        return possibleSitesForRole.includes(tag);
+    }
+
+    _setCurrentUSsr(userRole, userName) {
+        this.currentLogedUser.role = userRole;
+        this.currentLogedUser.username = userName;
+
+        if (userRole !== AccountRoles.WRONG_USERNAME && userRole !== AccountRoles.UNAUTHORIZED) {
+            Cookies.setCookie('username', userName, 30);
+
+            $("#username-fill-field").text('UserName:\t' + userName);
+            $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
+            $(".user-logged").removeClass('hidden');
+            $(".user-logged-out").addClass('hidden');
+        } else {
+            Cookies.deleteCookie('username');
+        }
     }
 
     _showPage(role) {
         switch (role) {
             case AccountRoles.BAND:
-                $(".welcome-screen, .fan-section").addClass('hidden');
-                $(".band-section").removeClass('hidden');
                 window.location.hash = 'band-section';
                 break;
             case AccountRoles.FAN:
-                $(".welcome-screen, .band-section").addClass('hidden');
-                $(".fan-section").removeClass('hidden');
                 window.location.hash = 'fan-section';
                 break;
             case AccountRoles.UNAUTHORIZED:
-                $(".band-section, .fan-section").addClass('hidden');
-                $(".welcome-screen").removeClass('hidden');
-                window.location.hash = 'header';
+                window.location.hash = 'welcome-screen';
                 break;
             case AccountRoles.WRONG_USERNAME:
                 break;
@@ -100,12 +120,14 @@ export class AccountRoles {
         return 4;
     }
 
-    static ToString(role){
-        switch (role){
+    static ToString(role) {
+        switch (role) {
             case AccountRoles.BAND:
-                return "Band administrator.";
+                return "band";
             case AccountRoles.FAN:
-                return "Fan";
+                return "fan";
+            case AccountRoles.UNAUTHORIZED:
+                return 'unauthorized';
             default:
                 return "Wrong request."
         }

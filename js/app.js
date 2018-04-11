@@ -1,9 +1,11 @@
 import Account from "./Account";
+import HashChangeHandler from "./HashChangeHandler";
 
 document.addEventListener("DOMContentLoaded", () => {
+    window.location.hash = "welcome-screen";
+
     let account = new Account();
     account.loginFromCookie();
-    //todo load classes
 
     $("#login-button").on('click', (ev) => {
         account.login($("#username-input").val());
@@ -18,4 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
             account.login($("#username-input").val());
         }
     });
+
+    let hashChangeHandler = new HashChangeHandler(account);
+
+    $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
+
 });

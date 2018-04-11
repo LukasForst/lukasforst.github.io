@@ -16,6 +16,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * This class is only temporary till some backend will be developed.
+ * */
 var Account = function () {
     function Account() {
         _classCallCheck(this, Account);
@@ -32,12 +35,19 @@ var Account = function () {
             'role': AccountRoles.UNAUTHORIZED,
             'username': 'UNAUTHORIZED'
         };
+
+        this.sitesPermissions = {
+            'band': ['band-section', 'not-found', 'welcome-screen'],
+            'fan': ['fan-section', 'not-found', 'welcome-screen'],
+            'unauthorized': ['welcome-screen', 'not-found']
+        };
     }
 
     _createClass(Account, [{
-        key: 'logout',
-        value: function logout() {
-            _Cookies2.default.deleteCookie('username');
+        key: 'register',
+        value: function register(newUserName, role) {
+            this.activeUserNames[newUserName] = role;
+            this.login(newUserName);
         }
     }, {
         key: 'loginFromCookie',
@@ -54,27 +64,15 @@ var Account = function () {
             var userRole = void 0;
             if (userName) {
                 userRole = this.activeUserNames[userName];
-                if (userRole) {
-                    this.currentLogedUser.role = userRole;
-                    this.currentLogedUser.username = userName;
-                    _Cookies2.default.setCookie('username', userName, 30);
-
-                    $("#username-fill-field").text('UserName:\t' + userName);
-                    $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
-                    $(".user-logged").removeClass('hidden');
-                    $(".user-logged-out").addClass('hidden');
-                } else {
+                if (!userRole) {
+                    userName = 'unauthorized';
                     userRole = AccountRoles.WRONG_USERNAME;
                 }
             } else {
+                userName = 'unauthorized';
                 userRole = AccountRoles.UNAUTHORIZED;
             }
-        }
-    }, {
-        key: 'register',
-        value: function register(newUserName, role) {
-            this.activeUserNames[newUserName] = role;
-            this.login(newUserName);
+            this._setCurrentUSsr(userRole, userName);
         }
     }, {
         key: 'proceedToRolePage',
@@ -82,23 +80,46 @@ var Account = function () {
             this._showPage(this.currentLogedUser.role);
         }
     }, {
+        key: 'logout',
+        value: function logout() {
+            _Cookies2.default.deleteCookie('username');
+        }
+    }, {
+        key: 'canAccessTag',
+        value: function canAccessTag(tag) {
+            var role = this.currentLogedUser.role;
+            var possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
+            return possibleSitesForRole.includes(tag);
+        }
+    }, {
+        key: '_setCurrentUSsr',
+        value: function _setCurrentUSsr(userRole, userName) {
+            this.currentLogedUser.role = userRole;
+            this.currentLogedUser.username = userName;
+
+            if (userRole !== AccountRoles.WRONG_USERNAME && userRole !== AccountRoles.UNAUTHORIZED) {
+                _Cookies2.default.setCookie('username', userName, 30);
+
+                $("#username-fill-field").text('UserName:\t' + userName);
+                $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
+                $(".user-logged").removeClass('hidden');
+                $(".user-logged-out").addClass('hidden');
+            } else {
+                _Cookies2.default.deleteCookie('username');
+            }
+        }
+    }, {
         key: '_showPage',
         value: function _showPage(role) {
             switch (role) {
                 case AccountRoles.BAND:
-                    $(".welcome-screen, .fan-section").addClass('hidden');
-                    $(".band-section").removeClass('hidden');
                     window.location.hash = 'band-section';
                     break;
                 case AccountRoles.FAN:
-                    $(".welcome-screen, .band-section").addClass('hidden');
-                    $(".fan-section").removeClass('hidden');
                     window.location.hash = 'fan-section';
                     break;
                 case AccountRoles.UNAUTHORIZED:
-                    $(".band-section, .fan-section").addClass('hidden');
-                    $(".welcome-screen").removeClass('hidden');
-                    window.location.hash = 'header';
+                    window.location.hash = 'welcome-screen';
                     break;
                 case AccountRoles.WRONG_USERNAME:
                     break;
@@ -123,9 +144,11 @@ var AccountRoles = exports.AccountRoles = function () {
         value: function ToString(role) {
             switch (role) {
                 case AccountRoles.BAND:
-                    return "Band administrator.";
+                    return "band";
                 case AccountRoles.FAN:
-                    return "Fan";
+                    return "fan";
+                case AccountRoles.UNAUTHORIZED:
+                    return 'unauthorized';
                 default:
                     return "Wrong request.";
             }
@@ -209,18 +232,68 @@ var Cookies = function () {
 exports.default = Cookies;
 
 },{}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HashChangeHandler = function () {
+    function HashChangeHandler(account) {
+        _classCallCheck(this, HashChangeHandler);
+
+        this.account = account;
+        this.history = [];
+    }
+
+    _createClass(HashChangeHandler, [{
+        key: 'onHashChange',
+        value: function onHashChange(event) {
+            var oldUrl = event.originalEvent.oldURL;
+            var newUrl = event.originalEvent.newURL;
+
+            var oldSection = oldUrl.split("#")[1];
+            var newSection = newUrl.split('#')[1];
+            console.log('Old: ' + oldSection + ', New: ' + newSection);
+
+            if (!this.account.canAccessTag(newSection)) {
+                newSection = 'not-found';
+            }
+            $('section').addClass('hidden');
+            var className = '.' + newSection;
+            $(className).removeClass('hidden');
+
+            this.history.push(newSection);
+        }
+    }]);
+
+    return HashChangeHandler;
+}();
+
+exports.default = HashChangeHandler;
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var _Account = require("./Account");
 
 var _Account2 = _interopRequireDefault(_Account);
 
+var _HashChangeHandler = require("./HashChangeHandler");
+
+var _HashChangeHandler2 = _interopRequireDefault(_HashChangeHandler);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
+    window.location.hash = "welcome-screen";
+
     var account = new _Account2.default();
     account.loginFromCookie();
-    //todo load classes
 
     $("#login-button").on('click', function (ev) {
         account.login($("#username-input").val());
@@ -235,6 +308,12 @@ document.addEventListener("DOMContentLoaded", function () {
             account.login($("#username-input").val());
         }
     });
+
+    var hashChangeHandler = new _HashChangeHandler2.default(account);
+
+    $(window).on('hashchange', function (ev) {
+        return hashChangeHandler.onHashChange(ev);
+    });
 });
 
-},{"./Account":1}]},{},[3]);
+},{"./Account":1,"./HashChangeHandler":3}]},{},[4]);

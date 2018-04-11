@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     //todo load classes
-    $(".bodyClass").text("MUHEHEHHEHE");
+    $("#click-me").on('click', (ev) => {
+        ev.currentTarget.textContent = "Hell Yeah";
+        let overlay = $(".overlay");
+        if(overlay.hasClass("hidden")){
+            overlay.removeClass("hidden");
+        } else{
+            overlay.addClass("hidden");
+        }
+
+    })
 });

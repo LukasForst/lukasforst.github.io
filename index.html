@@ -6,11 +6,36 @@
     <title>Ultimate band tool</title>
 
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <link href="https://fonts.googleapis.com/css?family=Gugi" rel="stylesheet">
 
+    <script src="js/libraries/jquery-3.3.1.min.js"></script>
+    <script src="js/compiled/app.js"></script>
 <body>
-TODO
-</body>
+<header class="welcome-header">
+    <div class="overlay hidden"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-5 mx-auto">
+                <label for="username-input">Please enter your username.</label>
+                <input id="username-input" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col mx-auto">
+                <button id="click-me" class="btn btn-secondary btn-lg">Click me!</button>
+            </div>
+        </div>
+    </div>
+</header>
 
-<script src="js/libraries/jquery-3.3.1.min.js"></script>
-<script src="js/compiled/app.js"></script>
+<section class="second-view hidden">
+    <div class="container">
+        <div class="row">
+            <div class="col">First col</div>
+            <div class="col">Next col</div>
+        </div>
+    </div>
+</section>
+</body>
 </html>

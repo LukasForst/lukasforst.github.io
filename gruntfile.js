@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         //compile sass to css
@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                     style: 'compressed'
                 },
                 files: {
-                    'css/compiled_scss.css': 'scss/app.scss'
+                    'css/app.css': 'scss/app.scss'
                 }
             }
         },
@@ -19,9 +19,14 @@ module.exports = function(grunt) {
                 // Task-specific options go here.
             },
             all: {
-                src: ["css/**/*.css"],
+                src: [
+                    'css/**/*.css',
+                    '!css/app.css',
+                    '!css/compiled_scss.css',
+                    '!css/bootstrap'
+                ],
                 dest: "css/app.css"
-            },
+            }
         },
 
         //add support for es 5.1
@@ -39,11 +44,19 @@ module.exports = function(grunt) {
         watch: {
             css: {
                 files: [
-                    'scss/**/*.scss',
-                    'css/**/*.css',
-                    '!css/app.css' //remove app.css from watch
+                    'css/**/**.css',
+                    '!css/app.css',
+                    '!css/compiled_scss.css',
+                    '!css/bootstrap'
                 ],
-                tasks: ['sass', 'concat_css']
+                tasks: ['concat_css']
+
+            },
+            scss: {
+                files: [
+                    'scss/**/*.scss',
+                ],
+                tasks: ['sass']
             },
 
             js: {

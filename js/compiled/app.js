@@ -3,7 +3,15 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     //todo load classes
-    $(".bodyClass").text("MUHEHEHHEHE");
+    $("#click-me").on('click', function (ev) {
+        ev.currentTarget.textContent = "Hell Yeah";
+        var overlay = $(".overlay");
+        if (overlay.hasClass("hidden")) {
+            overlay.removeClass("hidden");
+        } else {
+            overlay.addClass("hidden");
+        }
+    });
 });
 
 },{}]},{},[1]);

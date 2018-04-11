@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
         account.login($("#username-input").val());
     });
 
+    $('#log-out').on('click', (ev) => account.logout());
+
     $("#proceed-to-role-page-btn").on('click', (ev) => {
         account.proceedToRolePage();
     });

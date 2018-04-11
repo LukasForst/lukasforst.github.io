@@ -11,7 +11,8 @@
     <script src="js/libraries/jquery-3.3.1.min.js"></script>
     <script src="js/compiled/app.js"></script>
 <body>
-<section id="header" class="welcome-screen">
+
+<section class="welcome-screen">
     <div class="overlay"></div>
     <div class="container-fluid user-logged hidden">
         <div class="row">
@@ -32,6 +33,9 @@
         <div class="row mt-2">
             <div class="col mx-auto">
                 <button id="proceed-to-role-page-btn" class="btn">Proceed!</button>
+            </div>
+            <div class="col mx-auto">
+                <button id="log-out" class="btn">Log out.</button>
             </div>
         </div>
     </div>
@@ -57,14 +61,17 @@
 </section>
 
 <section id="band-section" class="band-section hidden">
+    <div class="overlay"></div>
     This is band section!
 </section>
 
 <section id="fan-section" class="fan-section hidden">
+    <div class="overlay"></div>
     This is fan section!
 </section>
 
 <section class="not-found hidden">
+    <div class="overlay"></div>
     Not found!
 </section>
 </body>

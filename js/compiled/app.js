@@ -60,6 +60,7 @@ var Account = function () {
     }, {
         key: 'login',
         value: function login(userName) {
+            userName = userName.trim();
             console.log('Login for: ' + userName);
             var userRole = void 0;
             if (userName) {
@@ -82,7 +83,7 @@ var Account = function () {
     }, {
         key: 'logout',
         value: function logout() {
-            _Cookies2.default.deleteCookie('username');
+            this._setCurrentUSsr(AccountRoles.UNAUTHORIZED, '');
         }
     }, {
         key: 'canAccessTag',
@@ -97,6 +98,8 @@ var Account = function () {
             this.currentLogedUser.role = userRole;
             this.currentLogedUser.username = userName;
 
+            console.log('Current username: ' + userName);
+            console.log('Current role: ' + userRole);
             if (userRole !== AccountRoles.WRONG_USERNAME && userRole !== AccountRoles.UNAUTHORIZED) {
                 _Cookies2.default.setCookie('username', userName, 30);
 
@@ -104,8 +107,20 @@ var Account = function () {
                 $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
                 $(".user-logged").removeClass('hidden');
                 $(".user-logged-out").addClass('hidden');
+            } else if (userRole === AccountRoles.WRONG_USERNAME) {
+                $('#username-input').val(' ').trigger('focus');
+                _Cookies2.default.deleteCookie('username');
+                alert('Wrong username!');
             } else {
                 _Cookies2.default.deleteCookie('username');
+
+                $("#username-fill-field").text('UserName:\t');
+                $("#role-fill-field").text('Role:\t');
+                $(".user-logged").addClass('hidden');
+                $(".user-logged-out").removeClass('hidden');
+
+                $('#username-input').val('').trigger('focus');
+                window.location.hash = "welcome-screen";
             }
         }
     }, {
@@ -122,6 +137,7 @@ var Account = function () {
                     window.location.hash = 'welcome-screen';
                     break;
                 case AccountRoles.WRONG_USERNAME:
+                    alert('Wrong username!');
                     break;
                 default:
                     break;
@@ -265,6 +281,7 @@ var HashChangeHandler = function () {
             }
             $('section').addClass('hidden');
             var className = '.' + newSection;
+            console.log(className);
             $(className).removeClass('hidden');
 
             this.history.push(newSection);
@@ -297,6 +314,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $("#login-button").on('click', function (ev) {
         account.login($("#username-input").val());
+    });
+
+    $('#log-out').on('click', function (ev) {
+        return account.logout();
     });
 
     $("#proceed-to-role-page-btn").on('click', function (ev) {

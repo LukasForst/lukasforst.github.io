@@ -38,6 +38,7 @@ export default class Account {
     }
 
     login(userName) {
+        userName = userName.trim();
         console.log('Login for: ' + userName);
         let userRole;
         if (userName) {
@@ -59,7 +60,7 @@ export default class Account {
 
 
     logout() {
-        Cookies.deleteCookie('username');
+        this._setCurrentUSsr(AccountRoles.UNAUTHORIZED, '');
     }
 
     canAccessTag(tag) {
@@ -72,6 +73,8 @@ export default class Account {
         this.currentLogedUser.role = userRole;
         this.currentLogedUser.username = userName;
 
+        console.log('Current username: ' + userName);
+        console.log('Current role: ' + userRole);
         if (userRole !== AccountRoles.WRONG_USERNAME && userRole !== AccountRoles.UNAUTHORIZED) {
             Cookies.setCookie('username', userName, 30);
 
@@ -79,10 +82,23 @@ export default class Account {
             $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
             $(".user-logged").removeClass('hidden');
             $(".user-logged-out").addClass('hidden');
+        } else if(userRole === AccountRoles.WRONG_USERNAME){
+            $('#username-input').val(' ').trigger('focus');
+            Cookies.deleteCookie('username');
+            alert('Wrong username!');
         } else {
             Cookies.deleteCookie('username');
+
+            $("#username-fill-field").text('UserName:\t');
+            $("#role-fill-field").text('Role:\t');
+            $(".user-logged").addClass('hidden');
+            $(".user-logged-out").removeClass('hidden');
+
+            $('#username-input').val('').trigger('focus');
+            window.location.hash = "welcome-screen";
         }
     }
+
 
     _showPage(role) {
         switch (role) {
@@ -96,6 +112,7 @@ export default class Account {
                 window.location.hash = 'welcome-screen';
                 break;
             case AccountRoles.WRONG_USERNAME:
+                alert('Wrong username!');
                 break;
             default:
                 break;

@@ -2,38 +2,12 @@
 
 .welcome-screen {
   display: flex;
-  height: calc(100vh);
-  justify-content: center;
-  align-items: center;
-
-  background: url("../img/band_live.jpg") center center;
-  background-size: cover;
-  z-index: 1;
-
-  text-align: center;
-  font-family: 'Gugi', cursive;
-  font-size: large;
-  color: $welcome-header-text-color;
-
-  & .overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: $black-overlay;
-  }
 
   & .form-control {
     text-align: center
   }
 
   & a {
-    color: $welcome-header-text-color;
-    &:hover {
-      color: $welcome-header-text-color;
-    }
-
     &#register-link {
       font-size: small;
     }

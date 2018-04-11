@@ -17,6 +17,7 @@ export default class HashChangeHandler{
         }
         $('section').addClass('hidden');
         let className = '.' + newSection;
+        console.log(className);
         $(className).removeClass('hidden');
 
         this.history.push(newSection);

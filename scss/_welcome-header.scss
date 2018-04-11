@@ -1,24 +1,43 @@
+@import "colors";
+
 .welcome-header {
   display: flex;
+  height: calc(100vh);
+  justify-content: center;
+  align-items: center;
+
+  background: url("../img/band_live.jpg") center center;
+  background-size: cover;
+  z-index: 1;
+
   text-align: center;
   font-family: 'Gugi', cursive;
   font-size: large;
-  color: white;
-  height: calc(100vh);
-  background: url("../img/band_live.jpg") center center;
-  background-size: cover;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
+  color: $welcome-header-text-color;
+
+  & .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: $black-overlay;
+  }
+
+  & .form-control {
+    text-align: center
+  }
+
+  & a {
+    color: $welcome-header-text-color;
+    &:hover{
+      color: $welcome-header-text-color;
+    }
+  }
 }
 
-.welcome-header > .overlay{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0,0,0,0.5);
+#register-link {
+  font-size: small;
 }
 
 .welcome-header-background{

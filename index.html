@@ -7,35 +7,38 @@
 
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
-    <link href="https://fonts.googleapis.com/css?family=Gugi" rel="stylesheet">
 
     <script src="js/libraries/jquery-3.3.1.min.js"></script>
     <script src="js/compiled/app.js"></script>
 <body>
-<header class="welcome-header">
-    <div class="overlay hidden"></div>
+<header id="header" class="welcome-header">
+    <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-5 mx-auto">
+            <div class="col-lg-4 col-sm-4 col-6 mx-auto">
                 <label for="username-input">Please enter your username.</label>
-                <input id="username-input" type="text" class="form-control">
+                <input id="username-input" type="text" class="form-control" autofocus>
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col mx-auto">
-                <button id="click-me" class="btn btn-secondary btn-lg">Click me!</button>
+            <div class="col">
+                <button id="login-button" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <a id="register-link" href="">Or register here</a>
             </div>
         </div>
     </div>
 </header>
 
-<section class="second-view hidden">
-    <div class="container">
-        <div class="row">
-            <div class="col">First col</div>
-            <div class="col">Next col</div>
-        </div>
-    </div>
+<section id="band-section" class="band-section hidden">
+    This is band section!
+</section>
+
+<section id="fan-section" class="fan-section hidden">
+    This is fan section!
 </section>
 </body>
 </html>

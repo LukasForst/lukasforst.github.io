@@ -1,6 +1,6 @@
 @import "colors";
 
-.welcome-header {
+.welcome-screen {
   display: flex;
   height: calc(100vh);
   justify-content: center;
@@ -30,21 +30,12 @@
 
   & a {
     color: $welcome-header-text-color;
-    &:hover{
+    &:hover {
       color: $welcome-header-text-color;
     }
+
+    &#register-link {
+      font-size: small;
+    }
   }
-}
-
-#register-link {
-  font-size: small;
-}
-
-.welcome-header-background{
-  position: absolute;
-
-  height: calc(100vh);
-  background: url("../img/band_live.jpg") center center;
-  background-size: cover;
-  z-index: 0;
 }

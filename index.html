@@ -11,9 +11,33 @@
     <script src="js/libraries/jquery-3.3.1.min.js"></script>
     <script src="js/compiled/app.js"></script>
 <body>
-<header id="header" class="welcome-header">
+
+<section id="header" class="welcome-screen">
     <div class="overlay"></div>
-    <div class="container-fluid">
+    <div class="container-fluid user-logged hidden">
+        <div class="row">
+            <div class="col mx-auto my-auto">
+                You are logged in!
+            </div>
+            <div class="col">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="username-fill-field"></div>
+                    </div>
+                    <div class="row mt-1">
+                        <div id="role-fill-field"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col mx-auto">
+                <button id="proceed-to-role-page-btn" class="btn">Proceed!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid user-logged-out">
         <div class="row">
             <div class="col-lg-4 col-sm-4 col-6 mx-auto">
                 <label for="username-input">Please enter your username.</label>
@@ -31,7 +55,7 @@
             </div>
         </div>
     </div>
-</header>
+</section>
 
 <section id="band-section" class="band-section hidden">
     This is band section!

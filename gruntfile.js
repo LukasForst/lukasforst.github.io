@@ -49,7 +49,7 @@ module.exports = function (grunt) {
                     '!css/compiled_scss.css',
                     '!css/bootstrap'
                 ],
-                tasks: ['concat_css']
+                tasks: [ ]
 
             },
             scss: {

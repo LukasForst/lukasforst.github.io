@@ -58,14 +58,17 @@ var Account = function () {
                     this.currentLogedUser.role = userRole;
                     this.currentLogedUser.username = userName;
                     _Cookies2.default.setCookie('username', userName, 30);
+
+                    $("#username-fill-field").text('UserName:\t' + userName);
+                    $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
+                    $(".user-logged").removeClass('hidden');
+                    $(".user-logged-out").addClass('hidden');
                 } else {
                     userRole = AccountRoles.WRONG_USERNAME;
                 }
             } else {
                 userRole = AccountRoles.UNAUTHORIZED;
             }
-
-            this._showPage(userRole);
         }
     }, {
         key: 'register',
@@ -74,26 +77,30 @@ var Account = function () {
             this.login(newUserName);
         }
     }, {
+        key: 'proceedToRolePage',
+        value: function proceedToRolePage() {
+            this._showPage(this.currentLogedUser.role);
+        }
+    }, {
         key: '_showPage',
         value: function _showPage(role) {
             switch (role) {
                 case AccountRoles.BAND:
-                    $(".welcome-header, .fan-section").addClass('hidden');
+                    $(".welcome-screen, .fan-section").addClass('hidden');
                     $(".band-section").removeClass('hidden');
                     window.location.hash = 'band-section';
                     break;
                 case AccountRoles.FAN:
-                    $(".welcome-header, .band-section").addClass('hidden');
+                    $(".welcome-screen, .band-section").addClass('hidden');
                     $(".fan-section").removeClass('hidden');
                     window.location.hash = 'fan-section';
                     break;
                 case AccountRoles.UNAUTHORIZED:
                     $(".band-section, .fan-section").addClass('hidden');
-                    $(".welcome-header").removeClass('hidden');
+                    $(".welcome-screen").removeClass('hidden');
                     window.location.hash = 'header';
                     break;
                 case AccountRoles.WRONG_USERNAME:
-                    alert("Wrong username");
                     break;
                 default:
                     break;
@@ -112,6 +119,18 @@ var AccountRoles = exports.AccountRoles = function () {
     }
 
     _createClass(AccountRoles, null, [{
+        key: 'ToString',
+        value: function ToString(role) {
+            switch (role) {
+                case AccountRoles.BAND:
+                    return "Band administrator.";
+                case AccountRoles.FAN:
+                    return "Fan";
+                default:
+                    return "Wrong request.";
+            }
+        }
+    }, {
         key: 'BAND',
         get: function get() {
             return 1;
@@ -205,6 +224,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $("#login-button").on('click', function (ev) {
         account.login($("#username-input").val());
+    });
+
+    $("#proceed-to-role-page-btn").on('click', function (ev) {
+        account.proceedToRolePage();
     });
 
     document.addEventListener('keypress', function (ev) {

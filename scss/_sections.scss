@@ -5,12 +5,14 @@ body {
 }
 
 section {
-  display: flex;
-  height: calc(100vh);
-  justify-content: center;
-  align-items: center;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  //justify-content: center;
+  //align-items: center;
 
-  background-size: 100% 100%;
+  background-size: cover;
   background-image: url("../img/band_live.jpg");
   background-color: #1d2124;
   background-repeat: no-repeat;
@@ -21,6 +23,8 @@ section {
   font-family: 'Gugi', cursive;
   font-size: large;
   color: $welcome-header-text-color;
+  //transition: transform 500ms;
+  transform: translateY(-100%);
 
   & .overlay {
     position: absolute;
@@ -41,6 +45,17 @@ section {
 
 }
 
+.previous-section {
+  transition: transform 500ms;
+  transform: translateY(-100%);
+}
+
+.next-section {
+  transition: transform 0ms;
+  transform: translateY(100%);
+}
+
 .active {
-  visibility: visible;
+  transition: transform 500ms !important;
+  transform: translateY(0) !important;
 }

@@ -282,6 +282,7 @@ var HashChangeHandler = function () {
         _classCallCheck(this, HashChangeHandler);
 
         this.account = account;
+        this.currentSection = '';
         this.history = [];
 
         var hash = window.location.hash;
@@ -308,10 +309,23 @@ var HashChangeHandler = function () {
                 }
             }
 
-            $('section').addClass('hidden');
-            var className = '.' + newSection;
-            $(className).removeClass('hidden');
+            // $('section').removeClass('active');
+            // let className = '.' + newSection;
+            // $(className).addClass('active');
+            this.changeSections(this.currentSection, newSection);
+            this.currentSection = newSection;
             this.history.push(newSection);
+        }
+    }, {
+        key: 'changeSections',
+        value: function changeSections(current, next) {
+            var currentClass = '.' + current;
+            var nextClass = '.' + next;
+
+            if (current !== '') {
+                $(currentClass).addClass('previous-section').removeClass('next-section active');
+            }
+            $(nextClass).addClass('active');
         }
     }]);
 

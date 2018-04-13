@@ -21,7 +21,7 @@ export default class Account {
         this.sitesPermissions = {
             'band': ['band-section', 'not-found', 'welcome-screen'],
             'fan': ['fan-section', 'not-found', 'welcome-screen'],
-            'unauthorized': ['welcome-screen', 'not-found']
+            'unauthorized': ['not-found', 'login-screen']
         }
     }
 
@@ -33,8 +33,29 @@ export default class Account {
     loginFromCookie() {
         let userName = Cookies.getCookie('username');
         if (userName !== '') {
-            this.login(userName);
+            if(this.login(userName) === AccountRoles.UNAUTHORIZED){
+                window.location.hash = 'login-screen'
+            }
         }
+    }
+
+    loginAndShowPage(username){
+        let role = this.login(username);
+        switch (role){
+            case AccountRoles.UNAUTHORIZED:
+                console.log('login - unauthorized');
+                break;
+            case AccountRoles.WRONG_USERNAME:
+                alert('Wrong username!');
+                break;
+            default:
+                window.location.hash = 'welcome-screen';
+                break;
+        }
+    }
+
+    isLoggedIn(){
+        return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED;
     }
 
     login(userName) {
@@ -43,6 +64,7 @@ export default class Account {
         let userRole;
         if (userName) {
             userRole = this.activeUserNames[userName];
+
             if (!userRole) {
                 userName = 'unauthorized';
                 userRole = AccountRoles.WRONG_USERNAME;
@@ -52,6 +74,7 @@ export default class Account {
             userRole = AccountRoles.UNAUTHORIZED;
         }
         this._setCurrentUSsr(userRole, userName);
+        return userRole;
     }
 
     proceedToRolePage() {
@@ -61,6 +84,7 @@ export default class Account {
 
     logout() {
         this._setCurrentUSsr(AccountRoles.UNAUTHORIZED, '');
+        window.location.hash = 'login-screen';
     }
 
     canAccessTag(tag) {
@@ -80,8 +104,6 @@ export default class Account {
 
             $("#username-fill-field").text('UserName:\t' + userName);
             $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
-            $(".user-logged").removeClass('hidden');
-            $(".user-logged-out").addClass('hidden');
         } else if(userRole === AccountRoles.WRONG_USERNAME){
             $('#username-input').val(' ').trigger('focus');
             Cookies.deleteCookie('username');
@@ -91,11 +113,6 @@ export default class Account {
 
             $("#username-fill-field").text('UserName:\t');
             $("#role-fill-field").text('Role:\t');
-            $(".user-logged").addClass('hidden');
-            $(".user-logged-out").removeClass('hidden');
-
-            $('#username-input').val('').trigger('focus');
-            window.location.hash = "welcome-screen";
         }
     }
 

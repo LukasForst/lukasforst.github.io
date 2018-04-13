@@ -1,13 +1,20 @@
 @import "colors";
 
+body {
+  background-color: #1d2124;
+}
+
 section {
   display: flex;
   height: calc(100vh);
   justify-content: center;
   align-items: center;
 
-  background: url("../img/band_live.jpg") center center;
-  background-size: cover;
+  background-size: 100% 100%;
+  background-image: url("../img/band_live.jpg");
+  background-color: #1d2124;
+  background-repeat: no-repeat;
+
   z-index: 1;
 
   text-align: center;
@@ -32,4 +39,8 @@ section {
     }
   }
 
+}
+
+.active {
+  visibility: visible;
 }

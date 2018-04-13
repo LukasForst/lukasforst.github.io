@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     account.loginFromCookie();
 
     $("#login-button").on('click', (ev) => {
-        account.login($("#username-input").val());
+        let input =$("#username-input");
+        account.loginAndShowPage(input.val());
+        input.val('');
     });
 
     $('#log-out').on('click', (ev) => account.logout());
@@ -18,7 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener('keypress', (ev) => {
         if (ev.code === 'Enter') {
-            account.login($("#username-input").val());
+            let input =$("#username-input");
+            account.loginAndShowPage(input.val());
+            input.val('');
         }
     });
 

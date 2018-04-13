@@ -12,9 +12,30 @@
     <script src="js/compiled/app.js"></script>
 <body>
 
+<section id="login-screen" class="login-screen active">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-sm-4 col-6 mx-auto">
+                <label for="username-input">Please enter your username.</label>
+                <input id="username-input" type="text" class="form-control" autofocus>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <button id="login-button" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <a id="register-link" href="">Or register here</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="welcome-screen" class="welcome-screen">
     <div class="overlay"></div>
-    <div class="container-fluid user-logged hidden">
+    <div class="container-fluid">
         <div class="row">
             <div class="col mx-auto my-auto">
                 You are logged in!
@@ -39,38 +60,19 @@
             </div>
         </div>
     </div>
-
-    <div class="container-fluid user-logged-out">
-        <div class="row">
-            <div class="col-lg-4 col-sm-4 col-6 mx-auto">
-                <label for="username-input">Please enter your username.</label>
-                <input id="username-input" type="text" class="form-control" autofocus>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col">
-                <button id="login-button" class="btn btn-secondary btn-lg">Login</button>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <a id="register-link" href="">Or register here</a>
-            </div>
-        </div>
-    </div>
 </section>
 
-<section id="band-section" class="band-section hidden">
+<section id="band-section" class="band-section">
     <div class="overlay"></div>
     This is band section!
 </section>
 
-<section id="fan-section" class="fan-section hidden">
+<section id="fan-section" class="fan-section">
     <div class="overlay"></div>
     This is fan section!
 </section>
 
-<section class="not-found hidden">
+<section class="not-found">
     <div class="overlay"></div>
     Not found!
 </section>

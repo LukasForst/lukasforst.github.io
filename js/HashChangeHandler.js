@@ -18,7 +18,11 @@ export default class HashChangeHandler {
         let newSection = newUrl.split('#')[1];
 
         if (!this.account.canAccessTag(newSection)) {
-            newSection = newSection ? 'not-found' : 'welcome-screen';
+            if(newSection === 'login-screen' && this.account.isLoggedIn()){
+                newSection = 'welcome-screen';
+            } else {
+                newSection = newSection ? 'not-found' : 'welcome-screen';
+            }
         }
 
         $('section').addClass('hidden');

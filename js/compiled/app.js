@@ -39,7 +39,7 @@ var Account = function () {
         this.sitesPermissions = {
             'band': ['band-section', 'not-found', 'welcome-screen'],
             'fan': ['fan-section', 'not-found', 'welcome-screen'],
-            'unauthorized': ['welcome-screen', 'not-found']
+            'unauthorized': ['not-found', 'login-screen']
         };
     }
 
@@ -54,8 +54,31 @@ var Account = function () {
         value: function loginFromCookie() {
             var userName = _Cookies2.default.getCookie('username');
             if (userName !== '') {
-                this.login(userName);
+                if (this.login(userName) === AccountRoles.UNAUTHORIZED) {
+                    window.location.hash = 'login-screen';
+                }
             }
+        }
+    }, {
+        key: 'loginAndShowPage',
+        value: function loginAndShowPage(username) {
+            var role = this.login(username);
+            switch (role) {
+                case AccountRoles.UNAUTHORIZED:
+                    console.log('login - unauthorized');
+                    break;
+                case AccountRoles.WRONG_USERNAME:
+                    alert('Wrong username!');
+                    break;
+                default:
+                    window.location.hash = 'welcome-screen';
+                    break;
+            }
+        }
+    }, {
+        key: 'isLoggedIn',
+        value: function isLoggedIn() {
+            return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED;
         }
     }, {
         key: 'login',
@@ -65,6 +88,7 @@ var Account = function () {
             var userRole = void 0;
             if (userName) {
                 userRole = this.activeUserNames[userName];
+
                 if (!userRole) {
                     userName = 'unauthorized';
                     userRole = AccountRoles.WRONG_USERNAME;
@@ -74,6 +98,7 @@ var Account = function () {
                 userRole = AccountRoles.UNAUTHORIZED;
             }
             this._setCurrentUSsr(userRole, userName);
+            return userRole;
         }
     }, {
         key: 'proceedToRolePage',
@@ -84,6 +109,7 @@ var Account = function () {
         key: 'logout',
         value: function logout() {
             this._setCurrentUSsr(AccountRoles.UNAUTHORIZED, '');
+            window.location.hash = 'login-screen';
         }
     }, {
         key: 'canAccessTag',
@@ -105,8 +131,6 @@ var Account = function () {
 
                 $("#username-fill-field").text('UserName:\t' + userName);
                 $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
-                $(".user-logged").removeClass('hidden');
-                $(".user-logged-out").addClass('hidden');
             } else if (userRole === AccountRoles.WRONG_USERNAME) {
                 $('#username-input').val(' ').trigger('focus');
                 _Cookies2.default.deleteCookie('username');
@@ -116,11 +140,6 @@ var Account = function () {
 
                 $("#username-fill-field").text('UserName:\t');
                 $("#role-fill-field").text('Role:\t');
-                $(".user-logged").addClass('hidden');
-                $(".user-logged-out").removeClass('hidden');
-
-                $('#username-input').val('').trigger('focus');
-                window.location.hash = "welcome-screen";
             }
         }
     }, {
@@ -282,7 +301,11 @@ var HashChangeHandler = function () {
             var newSection = newUrl.split('#')[1];
 
             if (!this.account.canAccessTag(newSection)) {
-                newSection = newSection ? 'not-found' : 'welcome-screen';
+                if (newSection === 'login-screen' && this.account.isLoggedIn()) {
+                    newSection = 'welcome-screen';
+                } else {
+                    newSection = newSection ? 'not-found' : 'welcome-screen';
+                }
             }
 
             $('section').addClass('hidden');
@@ -316,7 +339,9 @@ document.addEventListener("DOMContentLoaded", function () {
     account.loginFromCookie();
 
     $("#login-button").on('click', function (ev) {
-        account.login($("#username-input").val());
+        var input = $("#username-input");
+        account.loginAndShowPage(input.val());
+        input.val('');
     });
 
     $('#log-out').on('click', function (ev) {
@@ -329,7 +354,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener('keypress', function (ev) {
         if (ev.code === 'Enter') {
-            account.login($("#username-input").val());
+            var input = $("#username-input");
+            account.loginAndShowPage(input.val());
+            input.val('');
         }
     });
 

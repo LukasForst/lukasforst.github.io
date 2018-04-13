@@ -34,8 +34,12 @@ export default class Account {
         let userName = Cookies.getCookie('username');
         if (userName !== '') {
             if(this.login(userName) === AccountRoles.UNAUTHORIZED){
-                window.location.hash = 'login-screen'
+                window.location.hash = 'login-screen';
+            } else{
+                window.location.hash = !window.location.hash  ? 'welcome-screen' : window.location.hash;
             }
+        } else {
+            window.location.hash = 'login-screen';
         }
     }
 

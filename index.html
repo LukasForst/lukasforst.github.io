@@ -12,7 +12,8 @@
     <script src="js/compiled/app.js"></script>
 <body>
 
-<section id="login-screen" class="login-screen active">
+<section id="login-screen" class="login-screen screen">
+    <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-4 col-sm-4 col-6 mx-auto">
@@ -33,7 +34,7 @@
     </div>
 </section>
 
-<section id="welcome-screen" class="welcome-screen">
+<section id="welcome-screen" class="screen welcome-screen">
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
@@ -62,19 +63,33 @@
     </div>
 </section>
 
-<section id="band-section" class="band-section">
+<section id="band-section" class="screen band-section">
     <div class="overlay"></div>
-    This is band section!
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mx-auto my-auto">
+                This is band section!
+            </div>
+        </div>
+    </div>
 </section>
 
-<section id="fan-section" class="fan-section">
+<section id="fan-section" class="screen fan-section">
     <div class="overlay"></div>
-    This is fan section!
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mx-auto my-auto">
+                This is fan section!
+            </div>
+        </div>
+    </div>
 </section>
 
-<section class="not-found">
+<section id="not-found" class="screen not-found">
     <div class="overlay"></div>
-    Not found!
+    <div class="container-fluid">
+        Not found!
+    </div>
 </section>
 </body>
 </html>

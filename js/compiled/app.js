@@ -56,7 +56,11 @@ var Account = function () {
             if (userName !== '') {
                 if (this.login(userName) === AccountRoles.UNAUTHORIZED) {
                     window.location.hash = 'login-screen';
+                } else {
+                    window.location.hash = !window.location.hash ? 'welcome-screen' : window.location.hash;
                 }
+            } else {
+                window.location.hash = 'login-screen';
             }
         }
     }, {
@@ -323,7 +327,7 @@ var HashChangeHandler = function () {
             var nextClass = '.' + next;
 
             if (current !== '') {
-                $(currentClass).addClass('previous-section').removeClass('next-section active');
+                $(currentClass).removeClass('active');
             }
             $(nextClass).addClass('active');
         }

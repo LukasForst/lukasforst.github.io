@@ -39,7 +39,7 @@ export default class HashChangeHandler {
         let nextClass = '.' + next;
 
         if (current !== '') {
-            $(currentClass).addClass('previous-section').removeClass('next-section active');
+            $(currentClass).removeClass('active');
         }
         $(nextClass).addClass('active');
     }

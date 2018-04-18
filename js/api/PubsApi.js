@@ -1,7 +1,17 @@
 import Pub from "./Pub";
 
-export default class PubsApi extends PubApiMock{
+export default class PubsApi{
+    constructor(){
+        this._mock = new PubApiMock();
+    }
 
+    get allPubs(){
+        return this._mock.allPubs;
+    }
+
+    addPub(pub){
+        this._mock.addPub(pub);
+    }
 }
 
 class PubApiMock{

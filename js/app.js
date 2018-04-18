@@ -1,5 +1,6 @@
 import Account from "./Account";
 import HashChangeHandler from "./HashChangeHandler";
+import ApiData from "./api/ApiData";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -28,4 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let hashChangeHandler = new HashChangeHandler(account);
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
+
+    let api = new ApiData();
+    console.log(api.bandApi.allBands);
+    console.log(api.pubApi.allPubs);
+
+    console.log(api.concertsApi.allConcerts);
 });

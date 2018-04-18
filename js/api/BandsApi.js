@@ -1,6 +1,22 @@
 import Band from "./Band";
 
-export default class BandsApi extends BandsApiMock {
+export default class BandsApi {
+    constructor() {
+        this._mock = new BandsApiMock();
+    }
+
+    get allBands() {
+        return this._mock.allBands;
+    }
+
+    addBand(band) {
+        this._mock.addBand(band);
+    }
+
+    removeBand(bandId) {
+        this._mock.removeBand(bandId);
+    }
+
 }
 
 class BandsApiMock {
@@ -10,9 +26,9 @@ class BandsApiMock {
     }
 
     _populate() {
-        this.addBand(new Band('Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
-        this.addBand(new Band('Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
-        this.addBand(new Band('Rack Bites', ['Vojta', 'Karel', 'Maty']));
+        this.addBand(new Band(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
+        this.addBand(new Band(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
+        this.addBand(new Band(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
     }
 
     get allBands() {

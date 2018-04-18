@@ -2,7 +2,21 @@ import Concert from "./Concert";
 import Song from "./Song";
 import Playlist from "./Playlist";
 
-export default class ConcertsApi extends ConcertsApiMock {
+export default class ConcertsApi {
+    constructor(pubApi, bandApi){
+        this._mock = new ConcertsApiMock(pubApi, bandApi);
+    }
+    get allConcerts() {
+        return this._mock.allConcerts;
+    }
+
+    addConcert(concert) {
+        this._mock.addConcert(concert);
+    }
+
+    getConcertsForBand(bandId){
+        return this._mock.getConcertsForBand(bandId)
+    }
 }
 
 class ConcertsApiMock {
@@ -14,6 +28,7 @@ class ConcertsApiMock {
     _populate(pubs, bands) {
         this.addConcert(
             new Concert(
+                1,
                 bands[getRandomInt(0, bands.length)],
                 new Date('May 18, 2018 20:00:00'),
                 pubs[getRandomInt(0, pubs.length)]),
@@ -22,6 +37,7 @@ class ConcertsApiMock {
 
         this.addConcert(
             new Concert(
+                2,
                 bands[getRandomInt(0, bands.length)],
                 new Date('May 20, 2018 20:00:00'),
                 pubs[getRandomInt(0, pubs.length)]),
@@ -30,6 +46,7 @@ class ConcertsApiMock {
 
         this.addConcert(
             new Concert(
+                3,
                 bands[getRandomInt(0, bands.length)],
                 new Date('May 21, 2018 20:00:00'),
                 pubs[getRandomInt(0, pubs.length)]),
@@ -38,6 +55,7 @@ class ConcertsApiMock {
 
         this.addConcert(
             new Concert(
+                4,
                 bands[getRandomInt(0, bands.length)],
                 new Date('May 22, 2018 20:00:00'),
                 pubs[getRandomInt(0, pubs.length)]),

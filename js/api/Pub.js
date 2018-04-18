@@ -1,5 +1,6 @@
 export default class Pub{
-    constructor(place){
+    constructor(id, place){
         this.place = place;
+        this.id = id;
     }
 }

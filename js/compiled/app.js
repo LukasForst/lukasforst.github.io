@@ -341,6 +341,467 @@ exports.default = HashChangeHandler;
 },{}],4:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _BandsApi = require("./BandsApi");
+
+var _BandsApi2 = _interopRequireDefault(_BandsApi);
+
+var _ConcertsApi = require("./ConcertsApi");
+
+var _ConcertsApi2 = _interopRequireDefault(_ConcertsApi);
+
+var _PubsApi = require("./PubsApi");
+
+var _PubsApi2 = _interopRequireDefault(_PubsApi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ApiData = function ApiData() {
+    _classCallCheck(this, ApiData);
+
+    this.bandApi = new _BandsApi2.default();
+    this.pubApi = new _PubsApi2.default();
+    this.concertsApi = new _ConcertsApi2.default(this.pubApi, this.bandApi);
+};
+
+exports.default = ApiData;
+
+},{"./BandsApi":6,"./ConcertsApi":8,"./PubsApi":11}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Band = function Band(id, name, members) {
+    _classCallCheck(this, Band);
+
+    this.name = name;
+    this.members = members;
+    this.id = id;
+};
+
+exports.default = Band;
+
+},{}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Band = require('./Band');
+
+var _Band2 = _interopRequireDefault(_Band);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BandsApi = function () {
+    function BandsApi() {
+        _classCallCheck(this, BandsApi);
+
+        this._mock = new BandsApiMock();
+    }
+
+    _createClass(BandsApi, [{
+        key: 'addBand',
+        value: function addBand(band) {
+            this._mock.addBand(band);
+        }
+    }, {
+        key: 'removeBand',
+        value: function removeBand(bandId) {
+            this._mock.removeBand(bandId);
+        }
+    }, {
+        key: 'allBands',
+        get: function get() {
+            return this._mock.allBands;
+        }
+    }]);
+
+    return BandsApi;
+}();
+
+exports.default = BandsApi;
+
+var BandsApiMock = function () {
+    function BandsApiMock() {
+        _classCallCheck(this, BandsApiMock);
+
+        this._bands = [];
+        this._populate();
+    }
+
+    _createClass(BandsApiMock, [{
+        key: '_populate',
+        value: function _populate() {
+            this.addBand(new _Band2.default(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
+            this.addBand(new _Band2.default(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
+            this.addBand(new _Band2.default(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
+        }
+    }, {
+        key: 'addBand',
+        value: function addBand(band) {
+            this._bands.push(band);
+        }
+    }, {
+        key: 'removeBand',
+        value: function removeBand(bandId) {
+            this._bands = this._bands.filter(function (x) {
+                return x.id !== bandId;
+            });
+        }
+    }, {
+        key: 'allBands',
+        get: function get() {
+            return this._bands;
+        }
+    }]);
+
+    return BandsApiMock;
+}();
+
+},{"./Band":5}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Concert = function Concert(id, performingBand, date, place, playlist) {
+    _classCallCheck(this, Concert);
+
+    this.performingBand = performingBand;
+    this.playlist = playlist;
+    this.date = date;
+    this.place = place;
+    this.id = id;
+};
+
+exports.default = Concert;
+
+},{}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Concert = require("./Concert");
+
+var _Concert2 = _interopRequireDefault(_Concert);
+
+var _Song = require("./Song");
+
+var _Song2 = _interopRequireDefault(_Song);
+
+var _Playlist = require("./Playlist");
+
+var _Playlist2 = _interopRequireDefault(_Playlist);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ConcertsApi = function () {
+    function ConcertsApi(pubApi, bandApi) {
+        _classCallCheck(this, ConcertsApi);
+
+        this._mock = new ConcertsApiMock(pubApi, bandApi);
+    }
+
+    _createClass(ConcertsApi, [{
+        key: "addConcert",
+        value: function addConcert(concert) {
+            this._mock.addConcert(concert);
+        }
+    }, {
+        key: "getConcertsForBand",
+        value: function getConcertsForBand(bandId) {
+            return this._mock.getConcertsForBand(bandId);
+        }
+    }, {
+        key: "allConcerts",
+        get: function get() {
+            return this._mock.allConcerts;
+        }
+    }]);
+
+    return ConcertsApi;
+}();
+
+exports.default = ConcertsApi;
+
+var ConcertsApiMock = function () {
+    function ConcertsApiMock(pubApi, bandApi) {
+        _classCallCheck(this, ConcertsApiMock);
+
+        this._concerts = [];
+        this._populate(pubApi.allPubs, bandApi.allBands);
+    }
+
+    _createClass(ConcertsApiMock, [{
+        key: "_populate",
+        value: function _populate(pubs, bands) {
+            this.addConcert(new _Concert2.default(1, bands[getRandomInt(0, bands.length)], new Date('May 18, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length)]), generatePlayList(6));
+
+            this.addConcert(new _Concert2.default(2, bands[getRandomInt(0, bands.length)], new Date('May 20, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length)]), generatePlayList(6));
+
+            this.addConcert(new _Concert2.default(3, bands[getRandomInt(0, bands.length)], new Date('May 21, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length)]), generatePlayList(4));
+
+            this.addConcert(new _Concert2.default(4, bands[getRandomInt(0, bands.length)], new Date('May 22, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length)]), generatePlayList(8));
+        }
+    }, {
+        key: "addConcert",
+        value: function addConcert(concert) {
+            this._concerts.push(concert);
+        }
+    }, {
+        key: "getConcertsForBand",
+        value: function getConcertsForBand(bandId) {
+            return this._concerts.filter(function (x) {
+                return x.performingBand.id === bandId;
+            });
+        }
+    }, {
+        key: "allConcerts",
+        get: function get() {
+            return this._concerts;
+        }
+    }]);
+
+    return ConcertsApiMock;
+}();
+
+function generatePlayList(songsCount) {
+    var songs = [];
+    for (var i = 0; i < songsCount; i++) {
+        songs.push(generateSong());
+    }
+    return new _Playlist2.default(songs);
+}
+
+function generateSong() {
+    var songs = [new _Song2.default('Stejne jako ja', 'Chinaski'), new _Song2.default('Spac', 'Chinaski'), new _Song2.default('Klidna jako voda', 'Jelen'), new _Song2.default('Jelen', 'Chinaski'), new _Song2.default('Malotraktorem', 'Mig21'), new _Song2.default('Vlci srdce', 'Jelen'), new _Song2.default('Magdalena', 'Jelen'), new _Song2.default('Sight not more', 'Mumford n sons'), new _Song2.default('Lokomotiva', 'Poletime'), new _Song2.default('Mezi horami', 'Cechomor')];
+    return songs[getRandomInt(0, songs.length)];
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+},{"./Concert":7,"./Playlist":9,"./Song":12}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Song = require("./Song");
+
+var _Song2 = _interopRequireDefault(_Song);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Playlist = function () {
+    function Playlist(firstSongs) {
+        var _this = this;
+
+        _classCallCheck(this, Playlist);
+
+        this._playlist = [];
+        firstSongs.forEach(function (x) {
+            return _this._playlist.push(x);
+        });
+        this._playlist.sort(function (a, b) {
+            return _Song2.default.comparator(a, b);
+        });
+    }
+
+    _createClass(Playlist, [{
+        key: "addSong",
+        value: function addSong(song) {
+            this._playlist.push(song);
+        }
+    }, {
+        key: "sortedPlaylist",
+        get: function get() {
+            this._playlist.sort(function (a, b) {
+                return _Song2.default.comparator(a, b);
+            });
+            return this._playlist;
+        }
+    }]);
+
+    return Playlist;
+}();
+
+exports.default = Playlist;
+
+},{"./Song":12}],10:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Pub = function Pub(id, place) {
+    _classCallCheck(this, Pub);
+
+    this.place = place;
+    this.id = id;
+};
+
+exports.default = Pub;
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Pub = require('./Pub');
+
+var _Pub2 = _interopRequireDefault(_Pub);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PubsApi = function () {
+    function PubsApi() {
+        _classCallCheck(this, PubsApi);
+
+        this._mock = new PubApiMock();
+    }
+
+    _createClass(PubsApi, [{
+        key: 'addPub',
+        value: function addPub(pub) {
+            this._mock.addPub(pub);
+        }
+    }, {
+        key: 'allPubs',
+        get: function get() {
+            return this._mock.allPubs;
+        }
+    }]);
+
+    return PubsApi;
+}();
+
+exports.default = PubsApi;
+
+var PubApiMock = function () {
+    function PubApiMock() {
+        _classCallCheck(this, PubApiMock);
+
+        this._pubs = [];
+        this._populate();
+    }
+
+    _createClass(PubApiMock, [{
+        key: '_populate',
+        value: function _populate() {
+            this.addPub(new _Pub2.default('Peters Pub'));
+            this.addPub(new _Pub2.default('JazzRock Cafe'));
+        }
+    }, {
+        key: 'addPub',
+        value: function addPub(pub) {
+            this._pubs.push(pub);
+        }
+    }, {
+        key: 'allPubs',
+        get: function get() {
+            return this._pubs;
+        }
+    }]);
+
+    return PubApiMock;
+}();
+
+},{"./Pub":10}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Song = function () {
+    function Song(name, authorBandName) {
+        _classCallCheck(this, Song);
+
+        this.name = name;
+        this.authorBandName = authorBandName;
+        this.currentVotesUp = 0;
+        this.currentVotesDown = 0;
+    }
+
+    _createClass(Song, [{
+        key: 'upvote',
+        value: function upvote() {
+            this.currentVotesUp++;
+        }
+    }, {
+        key: 'downvote',
+        value: function downvote() {
+            this.currentVotesDown++;
+        }
+    }, {
+        key: 'toString',
+        value: function toString() {
+            return this.authorBandName + ' - ' + this.name + ' [+' + this.currentVotesUp + ', -' + this.currentVotesDown + ']';
+        }
+    }, {
+        key: 'value',
+        get: function get() {
+            return this.currentVotesUp - this.currentVotesDown;
+        }
+    }], [{
+        key: 'comparator',
+        value: function comparator(song1, song2) {
+            return song1.value - song2.value;
+        }
+    }]);
+
+    return Song;
+}();
+
+exports.default = Song;
+
+},{}],13:[function(require,module,exports){
+"use strict";
+
 var _Account = require("./Account");
 
 var _Account2 = _interopRequireDefault(_Account);
@@ -348,6 +809,10 @@ var _Account2 = _interopRequireDefault(_Account);
 var _HashChangeHandler = require("./HashChangeHandler");
 
 var _HashChangeHandler2 = _interopRequireDefault(_HashChangeHandler);
+
+var _ApiData = require("./api/ApiData");
+
+var _ApiData2 = _interopRequireDefault(_ApiData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -382,6 +847,12 @@ document.addEventListener("DOMContentLoaded", function () {
     $(window).on('hashchange', function (ev) {
         return hashChangeHandler.onHashChange(ev);
     });
+
+    var api = new _ApiData2.default();
+    console.log(api.bandApi.allBands);
+    console.log(api.pubApi.allPubs);
+
+    console.log(api.concertsApi.allConcerts);
 });
 
-},{"./Account":1,"./HashChangeHandler":3}]},{},[4]);
+},{"./Account":1,"./HashChangeHandler":3,"./api/ApiData":4}]},{},[13]);

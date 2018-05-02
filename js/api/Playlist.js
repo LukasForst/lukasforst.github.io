@@ -15,4 +15,14 @@ export default class Playlist {
         this._playlist.sort((a, b) => Song.comparator(a, b));
         return this._playlist;
     }
+
+    toString(){
+        let playlist = this.sortedPlaylist;
+        let str = "";
+        playlist.forEach(x => {
+            str += x.toString() + "\n";
+        });
+        console.log(str);
+        return str;
+    }
 }

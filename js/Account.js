@@ -1,10 +1,12 @@
 import Cookies from "./Cookies";
+import ConcertsProvider from "./ConcertsProvider";
 
 /**
  * This class is only temporary till some backend will be developed.
  * */
 export default class Account {
-    constructor() {
+    constructor(dataApi) {
+        this._dayaApi = dataApi;
         //note that this is testing state
         this.activeUserNames = {
             'bandAcc1': AccountRoles.BAND,
@@ -108,6 +110,8 @@ export default class Account {
 
             $("#username-fill-field").text('UserName:\t' + userName);
             $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
+
+            new ConcertsProvider(this._dayaApi.concertsApi).displayConcertsForFan();
         } else if(userRole === AccountRoles.WRONG_USERNAME){
             $('#username-input').val(' ').trigger('focus');
             Cookies.deleteCookie('username');

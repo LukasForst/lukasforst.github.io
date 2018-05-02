@@ -10,6 +10,7 @@
 
     <script src="js/libraries/jquery-3.3.1.min.js"></script>
     <script src="js/compiled/app.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
 <body>
 
 <section id="login-screen" class="login-screen screen">
@@ -74,16 +75,39 @@
     </div>
 </section>
 
+<div class="modal fade" id="universal-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="universal-modal-header" class="modal-title">Header</h4>
+            </div>
+            <div id="universal-modal-body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section id="fan-section" class="screen fan-section">
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col my-auto">
-                This is fan section!
+            <div class="col">
+                Please select one of these concerts.
             </div>
         </div>
-        <div class="row mx-auto concert-list">
-            
+        <div class="row">
+            <div class="col-lg-5 col-md col mx-auto">
+                <div class="input-group">
+                    <input id="concerts-search-bar" type="text" class="search-bar form-control" placeholder="Search for...">
+                </div>
+            </div>
+        </div>
+        <div class="row concert-list mt-5 mx-auto">
+            <ul id="concert-list" class="list-group mx-auto">
+            </ul>
         </div>
     </div>
 </section>

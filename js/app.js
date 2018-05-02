@@ -3,8 +3,9 @@ import HashChangeHandler from "./HashChangeHandler";
 import ApiData from "./api/ApiData";
 
 document.addEventListener("DOMContentLoaded", () => {
+    let api = new ApiData();
 
-    let account = new Account();
+    let account = new Account(api);
     account.loginFromCookie();
 
     $("#login-button").on('click', (ev) => {
@@ -19,18 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
         account.proceedToRolePage();
     });
 
-    document.addEventListener('keypress', (ev) => {
-        if (ev.code === 'Enter') {
-            let input =$("#username-input");
-            account.loginAndShowPage(input.val());
-            input.val('');
-        }
-    });
+    // document.addEventListener('keypress', (ev) => {
+    //     if (ev.code === 'Enter') {
+    //         let input =$("#username-input");
+    //         account.loginAndShowPage(input.val());
+    //         input.val('');
+    //     }
+    // });
 
     let hashChangeHandler = new HashChangeHandler(account);
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
 
-    let api = new ApiData();
     console.log(api.bandApi.allBands);
     console.log(api.pubApi.allPubs);
 

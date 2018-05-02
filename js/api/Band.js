@@ -4,4 +4,8 @@ export default class Band{
         this.members = members;
         this.id = id;
     }
+
+    toString(){
+        return this.name;
+    }
 }

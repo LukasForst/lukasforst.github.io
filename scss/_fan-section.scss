@@ -1,3 +1,24 @@
-.screen.fan-section{
+@import "colors";
+
+.screen.fan-section {
   background-image: url("../img/fan-wall.jpg");
+  justify-content: flex-start !important;
+  & .concert-list {
+    display: block;
+    width: 40%;
+    height: 100%;
+
+    & .search-bar{
+      border: none;
+      text-align: center;
+    }
+
+    & li {
+      cursor: pointer;
+    }
+
+    & li:hover:not(.search-li) {
+      background-color: $hover-fan-list-selection;
+    }
+  }
 }

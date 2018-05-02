@@ -3,4 +3,8 @@ export default class Pub{
         this.place = place;
         this.id = id;
     }
+
+    toString(){
+        return this.place;
+    }
 }

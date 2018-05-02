@@ -26,9 +26,6 @@ export default class HashChangeHandler {
             }
         }
 
-        // $('section').removeClass('active');
-        // let className = '.' + newSection;
-        // $(className).addClass('active');
         this.changeSections(this.currentSection, newSection);
         this.currentSection = newSection;
         this.history.push(newSection);

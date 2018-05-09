@@ -3,23 +3,18 @@ export default class Song {
         this.name = name;
         this.authorBandName = authorBandName;
         this.currentVotesUp = 0;
-        this.currentVotesDown = 0;
     }
 
     upvote() {
         this.currentVotesUp++;
     }
 
-    downvote() {
-        this.currentVotesDown++;
-    }
-
     get value() {
-        return this.currentVotesUp - this.currentVotesDown;
+        return this.currentVotesUp;
     }
 
     toString() {
-        return this.authorBandName + ' - ' + this.name + ' [+' + this.currentVotesUp + ', -' + this.currentVotesDown + ']';
+        return this.authorBandName + ' - ' + this.name + ' [+' + this.currentVotesUp + ']';
     }
 
     static comparator(song1, song2){

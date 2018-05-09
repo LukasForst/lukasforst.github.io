@@ -14,15 +14,18 @@ export default class ConcertsProvider {
             );
 
             $(`#concert-list-${x.id}`).on('click', (event) => {
-                $("#universal-modal-header").html(`<p>${x.performingBand}</p>`);
-                let dataToDisply = "";
+                let idx = 0;
+                $("#universal-modal-header").text(x.performingBand);
+                let dataToDisply = $(`<ul></ul>`);
                 x.playlist.sortedPlaylist.forEach((x) => {
-                    dataToDisply += `<p><butto class="btn">+</butto><button class="btn">-</button> - ${x}</p>`;
-                    $("")
+                    dataToDisply.append(
+                        $("<li></li>")
+                            .append(`<input type="checkbox" class="form-check-input" id="checkbox-${idx}-${x.authorBandName}-${x.name}">`)
+                            .append(`<label class="form-check-label" for="checkbox-${idx}-${x.authorBandName}-${x.name}">${x.authorBandName} - ${x.name}</label>`));
+                    idx++;
                 });
 
-                $("#universal-modal-body").html(dataToDisply);
-
+                $("#universal-modal-body").html('').append(dataToDisply);
                 $("#universal-modal").modal("toggle");
                 console.log(event)
             });

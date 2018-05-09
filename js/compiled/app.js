@@ -255,15 +255,15 @@ var ConcertsProvider = function () {
                 listHolder.append("<li id=concert-list-" + x.id + " class=\"list-group-item concert-li\">" + x.date.toLocaleDateString(navigator.languages[0]) + " - " + x.place + ": " + x.performingBand + "</li>");
 
                 $("#concert-list-" + x.id).on('click', function (event) {
-                    $("#universal-modal-header").html("<p>" + x.performingBand + "</p>");
-                    var dataToDisply = "";
+                    var idx = 0;
+                    $("#universal-modal-header").text(x.performingBand);
+                    var dataToDisply = $("<ul></ul>");
                     x.playlist.sortedPlaylist.forEach(function (x) {
-                        dataToDisply += "<p><butto class=\"btn\">+</butto><button class=\"btn\">-</button> - " + x + "</p>";
-                        $("");
+                        dataToDisply.append($("<li></li>").append("<input type=\"checkbox\" class=\"form-check-input\" id=\"checkbox-" + idx + "-" + x.authorBandName + "-" + x.name + "\">").append("<label class=\"form-check-label\" for=\"checkbox-" + idx + "-" + x.authorBandName + "-" + x.name + "\">" + x.authorBandName + " - " + x.name + "</label>"));
+                        idx++;
                     });
 
-                    $("#universal-modal-body").html(dataToDisply);
-
+                    $("#universal-modal-body").html('').append(dataToDisply);
                     $("#universal-modal").modal("toggle");
                     console.log(event);
                 });
@@ -882,7 +882,6 @@ var Song = function () {
         this.name = name;
         this.authorBandName = authorBandName;
         this.currentVotesUp = 0;
-        this.currentVotesDown = 0;
     }
 
     _createClass(Song, [{
@@ -891,19 +890,14 @@ var Song = function () {
             this.currentVotesUp++;
         }
     }, {
-        key: 'downvote',
-        value: function downvote() {
-            this.currentVotesDown++;
-        }
-    }, {
         key: 'toString',
         value: function toString() {
-            return this.authorBandName + ' - ' + this.name + ' [+' + this.currentVotesUp + ', -' + this.currentVotesDown + ']';
+            return this.authorBandName + ' - ' + this.name + ' [+' + this.currentVotesUp + ']';
         }
     }, {
         key: 'value',
         get: function get() {
-            return this.currentVotesUp - this.currentVotesDown;
+            return this.currentVotesUp;
         }
     }], [{
         key: 'comparator',

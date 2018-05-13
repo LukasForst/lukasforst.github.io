@@ -16,6 +16,13 @@ export default class Playlist {
         return this._playlist;
     }
 
+    addPointsForSong(songId, pointsCount){
+        const songs = this._playlist.filter(x => x.id === songId);
+        if(songs.length > 0){
+            songs[0].addVotes(pointsCount);
+        }
+    }
+
     toString(){
         let playlist = this.sortedPlaylist;
         let str = "";

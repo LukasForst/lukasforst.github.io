@@ -81,23 +81,26 @@ class ConcertsApiMock {
 function generatePlayList(songsCount) {
     const songs = [];
     for (let i = 0; i < songsCount; i++) {
-        songs.push(generateSong());
+        const song = generateSong();
+        if (songs.filter(x => x.id === song.id).length === 0) {
+            songs.push(song);
+        }
     }
     return new Playlist(songs);
 }
 
 function generateSong() {
     const songs = [
-        new Song('Stejne jako ja', 'Chinaski'),
-        new Song('Spac', 'Chinaski'),
-        new Song('Klidna jako voda', 'Jelen'),
-        new Song('Jelen', 'Chinaski'),
-        new Song('Malotraktorem', 'Mig21'),
-        new Song('Vlci srdce', 'Jelen'),
-        new Song('Magdalena', 'Jelen'),
-        new Song('Sight not more', 'Mumford n sons'),
-        new Song('Lokomotiva', 'Poletime'),
-        new Song('Mezi horami', 'Cechomor'),
+        new Song(1, 'Stejne jako ja', 'Chinaski'),
+        new Song(2, 'Spac', 'Chinaski'),
+        new Song(3, 'Klidna jako voda', 'Jelen'),
+        new Song(4, 'Jelen', 'Chinaski'),
+        new Song(5, 'Malotraktorem', 'Mig21'),
+        new Song(6, 'Vlci srdce', 'Jelen'),
+        new Song(7, 'Magdalena', 'Jelen'),
+        new Song(8, 'Sight not more', 'Mumford n sons'),
+        new Song(9, 'Lokomotiva', 'Poletime'),
+        new Song(10, 'Mezi horami', 'Cechomor'),
 
     ];
     return songs[getRandomInt(0, songs.length - 1)];

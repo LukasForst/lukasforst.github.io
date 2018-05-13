@@ -225,7 +225,7 @@ var AccountRoles = exports.AccountRoles = function () {
 }();
 
 },{"./ConcertsProvider":2,"./Cookies":3}],2:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -240,11 +240,14 @@ var ConcertsProvider = function () {
         _classCallCheck(this, ConcertsProvider);
 
         this._concertsApi = concertsApi;
+        this._currentDisplayedConcert = undefined;
     }
 
     _createClass(ConcertsProvider, [{
-        key: "displayConcertsForFan",
+        key: 'displayConcertsForFan',
         value: function displayConcertsForFan() {
+            var _this = this;
+
             var listHolder = $("#concert-list");
             var concerts = this._concertsApi.allConcerts;
             concerts.sort(function (a, b) {
@@ -252,26 +255,94 @@ var ConcertsProvider = function () {
             });
 
             concerts.forEach(function (x) {
-                listHolder.append("<li id=concert-list-" + x.id + " class=\"list-group-item concert-li\">" + x.date.toLocaleDateString(navigator.languages[0]) + " - " + x.place + ": " + x.performingBand + "</li>");
+                listHolder.append($('<li id=concert-list-' + x.id + ' class="list-group-item concert-li"></li>').text(x.date.toLocaleDateString(navigator.languages[0]) + ' - ' + x.place + ': ' + x.performingBand));
 
-                $("#concert-list-" + x.id).on('click', function (event) {
-                    var idx = 0;
-                    $("#universal-modal-header").text(x.performingBand);
-                    var dataToDisply = $("<ul></ul>");
-                    x.playlist.sortedPlaylist.forEach(function (x) {
-                        dataToDisply.append($("<li></li>").append("<input type=\"checkbox\" class=\"form-check-input\" id=\"checkbox-" + idx + "-" + x.authorBandName + "-" + x.name + "\">").append("<label class=\"form-check-label\" for=\"checkbox-" + idx + "-" + x.authorBandName + "-" + x.name + "\">" + x.authorBandName + " - " + x.name + "</label>"));
-                        idx++;
-                    });
-
-                    $("#universal-modal-body").html('').append(dataToDisply);
-                    $("#universal-modal").modal("toggle");
-                    console.log(event);
+                $('#concert-list-' + x.id).on('click', function (event) {
+                    _this._currentDisplayedConcert = x;
+                    _this._createConcertsInModal(x);
                 });
             });
+
+            $('#close-and-save-modal-button').on('click', this._updateValuesAfterClose.bind(this));
+
             this._addSearchListener();
         }
     }, {
-        key: "_addSearchListener",
+        key: '_updateValuesAfterClose',
+        value: function _updateValuesAfterClose() {
+            var _this2 = this;
+
+            $('#real-song-dropzone').remove();
+            var sorted = $('#song-dropzone-list');
+            sorted.children().each(function (index, value) {
+                var songId = parseInt(value.id.split('-')[3]);
+                _this2._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
+            });
+
+            $('#universal-modal').modal('hide');
+            $('#close-and-save-modal-button').off('click', this._updateValuesAfterClose.bind(this));
+            this._currentDisplayedConcert = undefined;
+        }
+    }, {
+        key: '_createConcertsInModal',
+        value: function _createConcertsInModal(concert) {
+            $("#universal-modal-header").text(concert.performingBand);
+            var modalBody = $("#universal-modal-body");
+            modalBody.html('');
+
+            var draggables = $('<div class="row"></div>');
+            var dropables = $('<div class="row"></div>');
+            dropables.append($('<ul id="song-dropzone-list" class="list-group list-group-flush mx-auto my-auto"></ul>'));
+            modalBody.append($('<div class="container-fluid"></div>').append(dropables).append(draggables));
+            this._createNextZoneToDrop();
+
+            var dragableList = $('<ul id=\'songs-in-list\' class="list-group mx-auto my-auto"></ul>');
+            concert.playlist.sortedPlaylist.forEach(function (value, index) {
+                var element = $('<li id=\'song-group-item-' + value.id + '\' class=\'list-group-item\' draggable=\'true\'></li>');
+                element.text(value.authorBandName + ' - ' + value.name);
+                element.on('dragstart', function (event) {
+                    return event.originalEvent.dataTransfer.setData("song", event.target.id);
+                });
+                dragableList.append(element);
+            });
+
+            draggables.append(dragableList);
+            $("#universal-modal").modal("toggle");
+        }
+    }, {
+        key: '_createNextZoneToDrop',
+        value: function _createNextZoneToDrop() {
+            var _this3 = this;
+
+            var list = $('#song-dropzone-list');
+            $('#real-song-dropzone').remove();
+            var li = $('<li id=\'real-song-dropzone\' class="list-group-item mx-auto my-auto"></li>');
+            li.text('Drop all sorted music here!');
+            li.on('drop', function (e) {
+                return _this3._drop(e.originalEvent);
+            });
+            li.on('dragover', function (e) {
+                return e.preventDefault();
+            });
+            list.append(li);
+        }
+    }, {
+        key: '_drop',
+        value: function _drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("song");
+            var list = $('#song-dropzone-list');
+            list.append($('#' + data));
+
+            var songsLins = $('#songs-in-list');
+            if (songsLins.children().length !== 0) {
+                this._createNextZoneToDrop();
+            } else {
+                $('#real-song-dropzone').remove();
+            }
+        }
+    }, {
+        key: '_addSearchListener',
         value: function _addSearchListener() {
             var callback = function callback(event) {
                 var records = $(".concert-li");
@@ -290,7 +361,7 @@ var ConcertsProvider = function () {
             });
         }
     }, {
-        key: "showConcertData",
+        key: 'showConcertData',
         value: function showConcertData() {}
     }]);
 
@@ -683,14 +754,24 @@ var ConcertsApiMock = function () {
 
 function generatePlayList(songsCount) {
     var songs = [];
+
+    var _loop = function _loop(i) {
+        var song = generateSong();
+        if (songs.filter(function (x) {
+            return x.id === song.id;
+        }).length === 0) {
+            songs.push(song);
+        }
+    };
+
     for (var i = 0; i < songsCount; i++) {
-        songs.push(generateSong());
+        _loop(i);
     }
     return new _Playlist2.default(songs);
 }
 
 function generateSong() {
-    var songs = [new _Song2.default('Stejne jako ja', 'Chinaski'), new _Song2.default('Spac', 'Chinaski'), new _Song2.default('Klidna jako voda', 'Jelen'), new _Song2.default('Jelen', 'Chinaski'), new _Song2.default('Malotraktorem', 'Mig21'), new _Song2.default('Vlci srdce', 'Jelen'), new _Song2.default('Magdalena', 'Jelen'), new _Song2.default('Sight not more', 'Mumford n sons'), new _Song2.default('Lokomotiva', 'Poletime'), new _Song2.default('Mezi horami', 'Cechomor')];
+    var songs = [new _Song2.default(1, 'Stejne jako ja', 'Chinaski'), new _Song2.default(2, 'Spac', 'Chinaski'), new _Song2.default(3, 'Klidna jako voda', 'Jelen'), new _Song2.default(4, 'Jelen', 'Chinaski'), new _Song2.default(5, 'Malotraktorem', 'Mig21'), new _Song2.default(6, 'Vlci srdce', 'Jelen'), new _Song2.default(7, 'Magdalena', 'Jelen'), new _Song2.default(8, 'Sight not more', 'Mumford n sons'), new _Song2.default(9, 'Lokomotiva', 'Poletime'), new _Song2.default(10, 'Mezi horami', 'Cechomor')];
     return songs[getRandomInt(0, songs.length - 1)];
 }
 
@@ -734,6 +815,16 @@ var Playlist = function () {
         key: "addSong",
         value: function addSong(song) {
             this._playlist.push(song);
+        }
+    }, {
+        key: "addPointsForSong",
+        value: function addPointsForSong(songId, pointsCount) {
+            var songs = this._playlist.filter(function (x) {
+                return x.id === songId;
+            });
+            if (songs.length > 0) {
+                songs[0].addVotes(pointsCount);
+            }
         }
     }, {
         key: "toString",
@@ -876,9 +967,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Song = function () {
-    function Song(name, authorBandName) {
+    function Song(id, name, authorBandName) {
         _classCallCheck(this, Song);
 
+        this.id = id;
         this.name = name;
         this.authorBandName = authorBandName;
         this.currentVotesUp = 0;
@@ -888,6 +980,11 @@ var Song = function () {
         key: 'upvote',
         value: function upvote() {
             this.currentVotesUp++;
+        }
+    }, {
+        key: 'addVotes',
+        value: function addVotes(times) {
+            this.currentVotesUp += times;
         }
     }, {
         key: 'toString',
@@ -902,7 +999,7 @@ var Song = function () {
     }], [{
         key: 'comparator',
         value: function comparator(song1, song2) {
-            return song1.value - song2.value;
+            return song2.value - song1.value;
         }
     }]);
 

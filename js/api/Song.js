@@ -1,5 +1,6 @@
 export default class Song {
-    constructor(name, authorBandName) {
+    constructor(id, name, authorBandName) {
+        this.id = id;
         this.name = name;
         this.authorBandName = authorBandName;
         this.currentVotesUp = 0;
@@ -7,6 +8,10 @@ export default class Song {
 
     upvote() {
         this.currentVotesUp++;
+    }
+
+    addVotes(times){
+        this.currentVotesUp += times;
     }
 
     get value() {
@@ -18,6 +23,6 @@ export default class Song {
     }
 
     static comparator(song1, song2){
-        return song1.value - song2.value;
+        return song2.value - song1.value;
     }
 }

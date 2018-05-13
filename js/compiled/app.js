@@ -25,6 +25,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * */
 var Account = function () {
     function Account(dataApi) {
+        var _this = this;
+
         _classCallCheck(this, Account);
 
         this._dayaApi = dataApi;
@@ -35,6 +37,14 @@ var Account = function () {
             'fan1': AccountRoles.FAN,
             'fan2': AccountRoles.FAN
         };
+
+        this._hashToUsername = {};
+        this._userNameToHash = {};
+        Object.keys(this.activeUserNames).forEach(function (x) {
+            var hash = generateHash(x);
+            _this._hashToUsername[hash] = x;
+            _this._userNameToHash[x] = hash;
+        });
 
         this.currentLogedUser = {
             'role': AccountRoles.UNAUTHORIZED,
@@ -57,8 +67,11 @@ var Account = function () {
     }, {
         key: "loginFromCookie",
         value: function loginFromCookie() {
-            var userName = _Cookies2.default.getCookie('username');
-            if (userName !== '') {
+            var userName = '';
+            var userHash = _Cookies2.default.getCookie('userHash');
+            if (userHash !== '') userName = this._hashToUsername[userHash];
+            if (userName !== undefined && userName !== '') {
+
                 if (this.login(userName) === AccountRoles.UNAUTHORIZED) {
                     window.location.hash = 'login-screen';
                 } else {
@@ -93,7 +106,6 @@ var Account = function () {
         key: "login",
         value: function login(userName) {
             userName = userName.trim();
-            console.log('Login for: ' + userName);
             var userRole = void 0;
             if (userName) {
                 userRole = this.activeUserNames[userName];
@@ -106,7 +118,7 @@ var Account = function () {
                 userName = 'unauthorized';
                 userRole = AccountRoles.UNAUTHORIZED;
             }
-            this._setCurrentUSsr(userRole, userName);
+            this._setCurrentUser(userRole, userName);
             return userRole;
         }
     }, {
@@ -117,7 +129,7 @@ var Account = function () {
     }, {
         key: "logout",
         value: function logout() {
-            this._setCurrentUSsr(AccountRoles.UNAUTHORIZED, '');
+            this._setCurrentUser(AccountRoles.UNAUTHORIZED, '');
             window.location.hash = 'login-screen';
         }
     }, {
@@ -128,15 +140,13 @@ var Account = function () {
             return possibleSitesForRole.includes(tag);
         }
     }, {
-        key: "_setCurrentUSsr",
+        key: "_setCurrentUser",
         value: function _setCurrentUSsr(userRole, userName) {
             this.currentLogedUser.role = userRole;
             this.currentLogedUser.username = userName;
 
-            console.log('Current username: ' + userName);
-            console.log('Current role: ' + userRole);
             if (userRole !== AccountRoles.WRONG_USERNAME && userRole !== AccountRoles.UNAUTHORIZED) {
-                _Cookies2.default.setCookie('username', userName, 30);
+                _Cookies2.default.setCookie('userHash', this._userNameToHash[userName], 30);
 
                 $("#username-fill-field").text('UserName:\t' + userName);
                 $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
@@ -144,10 +154,10 @@ var Account = function () {
                 new _ConcertsProvider2.default(this._dayaApi.concertsApi).displayConcertsForFan();
             } else if (userRole === AccountRoles.WRONG_USERNAME) {
                 $('#username-input').val(' ').trigger('focus');
-                _Cookies2.default.deleteCookie('username');
+                _Cookies2.default.deleteCookie('userHash');
                 alert('Wrong username!');
             } else {
-                _Cookies2.default.deleteCookie('username');
+                _Cookies2.default.deleteCookie('userHash');
 
                 $("#username-fill-field").text('UserName:\t');
                 $("#role-fill-field").text('Role:\t');
@@ -179,6 +189,20 @@ var Account = function () {
 }();
 
 exports.default = Account;
+
+
+function generateHash(string) {
+    var hash = 0,
+        i = void 0,
+        chr = void 0;
+    if (string.length === 0) return hash;
+    for (i = 0; i < string.length; i++) {
+        chr = string.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
 
 var AccountRoles = exports.AccountRoles = function () {
     function AccountRoles() {

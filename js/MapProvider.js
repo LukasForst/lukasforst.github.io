@@ -65,7 +65,6 @@ export default class MapProvider {
                 };
 
                 const icon = {
-                    // url: "http://www.tourismstcatharines.ca/wp-content/themes/tourism/images/you-are-here-icon.png",
                     url: "img/you-are-here-icon.png",
                     scaledSize: new google.maps.Size(60, 60),
                 };

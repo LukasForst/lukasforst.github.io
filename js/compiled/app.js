@@ -63,9 +63,9 @@ var Account = function () {
         };
 
         this.sitesPermissions = {
-            'band': ['band-section', 'not-found', 'welcome-screen'],
-            'fan': ['fan-section', 'not-found', 'welcome-screen'],
-            'unauthorized': ['not-found', 'login-screen']
+            'band': ['band-section', 'not-found', 'welcome-screen', 'map-section'],
+            'fan': ['fan-section', 'not-found', 'welcome-screen', 'map-section'],
+            'unauthorized': ['not-found', 'login-screen', 'map-section']
         };
     }
 
@@ -557,6 +557,150 @@ var HashChangeHandler = function () {
 exports.default = HashChangeHandler;
 
 },{}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MapProvider = function () {
+    function MapProvider(concertsApi) {
+        _classCallCheck(this, MapProvider);
+
+        this.concertsApi = concertsApi;
+        this.map = null;
+        this.showMap(false);
+    }
+
+    _createClass(MapProvider, [{
+        key: 'showMap',
+        value: function showMap(useLocation) {
+            var _this = this;
+
+            var mapDiv = $("#concerts-map");
+            var mapProp = {
+                //default center at city of Domazlice
+                center: new google.maps.LatLng(49.4397027, 12.931143499999962),
+                zoom: 16
+            };
+            this.map = new google.maps.Map(mapDiv.get(0), mapProp);
+
+            if (useLocation) this.initGeo(this.map);
+
+            var concerts = this.concertsApi.allConcerts;
+            var places = concerts.map(function (x) {
+                return x.place;
+            }).filter(function (v, i, a) {
+                return a.indexOf(v) === i;
+            });
+            var placesWithConcerts = {};
+            places.forEach(function (x) {
+                return placesWithConcerts[x] = concerts.filter(function (y) {
+                    return y.place === x;
+                });
+            });
+
+            var idx = 0;
+
+            var _loop = function _loop(key) {
+                var place = places.filter(function (x) {
+                    return x.place === key;
+                })[0];
+                var pin = new google.maps.Marker({
+                    position: new google.maps.LatLng(place.latitude, place.longtitude),
+                    title: key
+                });
+                pin.setMap(_this.map);
+
+                var tempLiHolder = $('<ul id="temporary-list-holder-' + idx + '" style="display:none"></ul>');
+                placesWithConcerts[key].forEach(function (x) {
+                    tempLiHolder.append($('<li id=temporary-list-holder-' + idx + '-' + x.id + ' class="list-group-item concert-li map-text"></li>').text(x.date.toLocaleDateString(navigator.languages[0]) + ' - ' + x.place + ': ' + x.performingBand));
+                });
+                //little hack, we need to append list to see it's outerHTML
+                mapDiv.append(tempLiHolder);
+                tempLiHolder = $('#temporary-list-holder-' + idx);
+                tempLiHolder.css('display', '');
+                var html = tempLiHolder[0].outerHTML;
+                tempLiHolder.remove();
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: html
+                });
+
+                google.maps.event.addListener(pin, 'click', function () {
+                    infowindow.open(_this.map, pin);
+                });
+
+                idx++;
+            };
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = Object.keys(placesWithConcerts)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var key = _step.value;
+
+                    _loop(key);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'initGeo',
+        value: function initGeo(map) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    var icon = {
+                        // url: "http://www.tourismstcatharines.ca/wp-content/themes/tourism/images/you-are-here-icon.png",
+                        url: "img/you-are-here-icon.png",
+                        scaledSize: new google.maps.Size(60, 60)
+                    };
+
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        animation: google.maps.Animation.BOUNCE,
+                        icon: icon
+                    });
+                    marker.setMap(map);
+                    map.setCenter(pos);
+                }, function () {
+                    console.error("Could not find location.");
+                });
+            } else {
+                console.log('Browser does not support geolocation.');
+            }
+        }
+    }]);
+
+    return MapProvider;
+}();
+
+exports.default = MapProvider;
+
+},{}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -589,7 +733,7 @@ var ApiData = function ApiData() {
 
 exports.default = ApiData;
 
-},{"./BandsApi":8,"./ConcertsApi":10,"./PubsApi":13}],7:[function(require,module,exports){
+},{"./BandsApi":9,"./ConcertsApi":11,"./PubsApi":14}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -621,7 +765,7 @@ var Band = function () {
 
 exports.default = Band;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -704,7 +848,7 @@ var BandsApiMock = function () {
     return BandsApiMock;
 }();
 
-},{"./Band":7}],9:[function(require,module,exports){
+},{"./Band":8}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -725,7 +869,7 @@ var Concert = function Concert(id, performingBand, date, place, playlist) {
 
 exports.default = Concert;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -847,7 +991,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-},{"./Concert":9,"./Playlist":11,"./Song":14}],11:[function(require,module,exports){
+},{"./Concert":10,"./Playlist":12,"./Song":15}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -920,7 +1064,7 @@ var Playlist = function () {
 
 exports.default = Playlist;
 
-},{"./Song":14}],12:[function(require,module,exports){
+},{"./Song":15}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -932,11 +1076,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Pub = function () {
-    function Pub(id, place) {
+    function Pub(id, place, latitude, longtitude) {
         _classCallCheck(this, Pub);
 
         this.place = place;
         this.id = id;
+        this.latitude = latitude;
+        this.longtitude = longtitude;
     }
 
     _createClass(Pub, [{
@@ -951,7 +1097,7 @@ var Pub = function () {
 
 exports.default = Pub;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1003,10 +1149,10 @@ var PubApiMock = function () {
     _createClass(PubApiMock, [{
         key: '_populate',
         value: function _populate() {
-            this.addPub(new _Pub2.default(1, 'Peters Pub'));
-            this.addPub(new _Pub2.default(2, 'JazzRock Cafe'));
-            this.addPub(new _Pub2.default(3, 'RockClub'));
-            this.addPub(new _Pub2.default(4, 'MKS'));
+            this.addPub(new _Pub2.default(1, 'Peters Pub', 49.4416424, 12.929870499999993));
+            this.addPub(new _Pub2.default(2, 'JazzRock Cafe', 49.43951250000001, 12.929611099999988));
+            this.addPub(new _Pub2.default(3, 'RockClub', 49.4397027, 12.931143499999962));
+            this.addPub(new _Pub2.default(4, 'MKS', 49.440131, 12.930489999999963));
         }
     }, {
         key: 'addPub',
@@ -1023,7 +1169,7 @@ var PubApiMock = function () {
     return PubApiMock;
 }();
 
-},{"./Pub":12}],14:[function(require,module,exports){
+},{"./Pub":13}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1076,7 +1222,7 @@ var Song = function () {
 
 exports.default = Song;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var _Account = require("./Account");
@@ -1090,6 +1236,10 @@ var _HashChangeHandler2 = _interopRequireDefault(_HashChangeHandler);
 var _ApiData = require("./api/ApiData");
 
 var _ApiData2 = _interopRequireDefault(_ApiData);
+
+var _MapProvider = require("./MapProvider");
+
+var _MapProvider2 = _interopRequireDefault(_MapProvider);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1107,6 +1257,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $('#log-out').on('click', function (ev) {
         return account.logout();
+    });
+
+    var map = new _MapProvider2.default(api.concertsApi);
+    $("#proceed-to-map-btn").on('click', function () {
+        window.location.hash = 'map-section';
+        map.showMap(true);
     });
 
     $("#proceed-to-role-page-btn").on('click', function (ev) {
@@ -1129,4 +1285,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-},{"./Account":1,"./HashChangeHandler":5,"./api/ApiData":6}]},{},[15]);
+},{"./Account":1,"./HashChangeHandler":5,"./MapProvider":6,"./api/ApiData":7}]},{},[16]);

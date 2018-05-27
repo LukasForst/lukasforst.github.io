@@ -1,11 +1,12 @@
 import Account from "./Account";
 import HashChangeHandler from "./HashChangeHandler";
 import ApiData from "./api/ApiData";
+import MapProvider from "./MapProvider";
 
 document.addEventListener("DOMContentLoaded", () => {
-    let api = new ApiData();
+    const api = new ApiData();
 
-    let account = new Account(api);
+    const account = new Account(api);
     account.loginFromCookie();
 
     $("#login-button").on('click', (ev) => {
@@ -15,6 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     $('#log-out').on('click', (ev) => account.logout());
+
+    const map = new MapProvider(api.concertsApi);
+    $("#proceed-to-map-btn").on('click', () => {
+        window.location.hash = 'map-section';
+        map.showMap(true);
+    });
 
     $("#proceed-to-role-page-btn").on('click', (ev) => {
         account.proceedToRolePage();
@@ -30,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    let hashChangeHandler = new HashChangeHandler(account);
+    const hashChangeHandler = new HashChangeHandler(account);
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
+
 });

@@ -21,10 +21,10 @@ class PubApiMock{
     }
 
     _populate(){
-        this.addPub(new Pub(1,'Peters Pub'));
-        this.addPub(new Pub(2,'JazzRock Cafe'));
-        this.addPub(new Pub(3,'RockClub'));
-        this.addPub(new Pub(4,'MKS'));
+        this.addPub(new Pub(1,'Peters Pub', 49.4416424, 12.929870499999993));
+        this.addPub(new Pub(2,'JazzRock Cafe', 49.43951250000001, 12.929611099999988));
+        this.addPub(new Pub(3,'RockClub', 49.4397027, 12.931143499999962));
+        this.addPub(new Pub(4,'MKS',49.440131,12.930489999999963));
     }
 
     get allPubs(){

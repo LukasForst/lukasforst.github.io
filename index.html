@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
@@ -11,9 +11,11 @@
     <script src="js/libraries/jquery-3.3.1.min.js"></script>
     <script src="js/compiled/app.js"></script>
     <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACZp6mIIT7bze3S1DGdk1685BiTrUnbYY"></script>
 <body>
 
 <section id="login-screen" class="login-screen screen">
+    <h6 style="display: none;">Login screen</h6>
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
@@ -36,13 +38,14 @@
 </section>
 
 <section id="welcome-screen" class="screen welcome-screen">
+    <h6 style="display: none;">Welcome screen</h6>
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col mx-auto my-auto">
+            <div class="col mx-auto">
                 You are logged in!
             </div>
-            <div class="col">
+            <div class="col mx-auto">
                 <div class="container-fluid">
                     <div class="row">
                         <div id="username-fill-field"></div>
@@ -61,15 +64,21 @@
                 <button id="log-out" class="btn">Log out.</button>
             </div>
         </div>
+        <div class="row mt-5">
+            <div class="col mx-auto">
+                <button id="proceed-to-map-btn" class="btn">Show map</button>
+            </div>
+        </div>
     </div>
 </section>
 
 <section id="band-section" class="screen band-section">
+    <h6 style="display: none;">Band section</h6>
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row my-auto">
             <div class="col my-auto">
-                <h4 id="name-band-section-header"></h4>
+                <h4 id="name-band-section-header">Band name</h4>
             </div>
         </div>
         <div class="row">
@@ -104,6 +113,7 @@
 </div>
 
 <section id="fan-section" class="screen fan-section">
+    <h6 style="display: none;">Fan section</h6>
     <div class="overlay"></div>
     <div class="container-fluid">
         <div class="row">
@@ -126,7 +136,15 @@
     </div>
 </section>
 
+<section id="map-section" class="screen map-section">
+    <h6 style="display: none;">Map section</h6>
+    <div id="concerts-map" class="map">
+
+    </div>
+</section>
+
 <section id="not-found" class="screen not-found">
+    <h6 style="display: none;">Not found!</h6>
     <div class="overlay"></div>
     <div class="container-fluid">
         Not found!

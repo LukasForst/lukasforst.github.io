@@ -38,9 +38,9 @@ export default class Account {
         };
 
         this.sitesPermissions = {
-            'band': ['band-section', 'not-found', 'welcome-screen'],
-            'fan': ['fan-section', 'not-found', 'welcome-screen'],
-            'unauthorized': ['not-found', 'login-screen']
+            'band': ['band-section', 'not-found', 'welcome-screen', 'map-section'],
+            'fan': ['fan-section', 'not-found', 'welcome-screen', 'map-section'],
+            'unauthorized': ['not-found', 'login-screen', 'map-section']
         }
     }
 

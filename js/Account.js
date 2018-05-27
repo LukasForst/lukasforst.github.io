@@ -18,9 +18,9 @@ export default class Account {
         };
 
         this._userToBandWirring = {
-            'poulicni' : 'Poulicni Lampa',
-            'rackBites' : 'Rack Bites',
-            'fousy' : 'Fousy'
+            'poulicni': 'Poulicni Lampa',
+            'rackBites': 'Rack Bites',
+            'fousy': 'Fousy'
         };
 
         this._hashToUsername = {};
@@ -69,7 +69,6 @@ export default class Account {
         let role = this.login(username);
         switch (role) {
             case AccountRoles.UNAUTHORIZED:
-                console.log('login - unauthorized');
                 break;
             case AccountRoles.WRONG_USERNAME:
                 alert('Wrong username!');
@@ -113,7 +112,7 @@ export default class Account {
     }
 
     canAccessTag(tag) {
-        if(tag === 'not-found' || tag === 'login-screen') return true;
+        if (tag === 'not-found' || tag === 'login-screen') return true;
         const role = this.currentLogedUser.role;
         const possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
         return possibleSitesForRole.includes(tag);
@@ -129,18 +128,14 @@ export default class Account {
             $("#username-fill-field").text('UserName:\t' + userName);
             $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
 
-            if(userRole === AccountRoles.FAN){
+            if (userRole === AccountRoles.FAN) {
                 new ConcertsProvider(this._dataApi.concertsApi).displayConcertsForFan();
-            } else if(userRole === AccountRoles.BAND){
+            } else if (userRole === AccountRoles.BAND) {
                 new BandProvider(this._dataApi).displayDataForBand(this._userToBandWirring[userName]);
             }
-        } else if (userRole === AccountRoles.WRONG_USERNAME) {
-            $('#username-input').val(' ').trigger('focus');
-            Cookies.deleteCookie('userHash');
-            alert('Wrong username!');
         } else {
             Cookies.deleteCookie('userHash');
-
+            $('#username-input').val('').trigger('focus');
             $("#username-fill-field").text('UserName:\t');
             $("#role-fill-field").text('Role:\t');
         }
@@ -156,10 +151,9 @@ export default class Account {
                 window.location.hash = 'fan-section';
                 break;
             case AccountRoles.UNAUTHORIZED:
-                window.location.hash = 'welcome-screen';
+                window.location.hash = 'login-screen';
                 break;
             case AccountRoles.WRONG_USERNAME:
-                alert('Wrong username!');
                 break;
             default:
                 break;

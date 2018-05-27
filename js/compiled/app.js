@@ -98,7 +98,6 @@ var Account = function () {
             var role = this.login(username);
             switch (role) {
                 case AccountRoles.UNAUTHORIZED:
-                    console.log('login - unauthorized');
                     break;
                 case AccountRoles.WRONG_USERNAME:
                     alert('Wrong username!');
@@ -168,13 +167,9 @@ var Account = function () {
                 } else if (userRole === AccountRoles.BAND) {
                     new _BandProvider2.default(this._dataApi).displayDataForBand(this._userToBandWirring[userName]);
                 }
-            } else if (userRole === AccountRoles.WRONG_USERNAME) {
-                $('#username-input').val(' ').trigger('focus');
-                _Cookies2.default.deleteCookie('userHash');
-                alert('Wrong username!');
             } else {
                 _Cookies2.default.deleteCookie('userHash');
-
+                $('#username-input').val('').trigger('focus');
                 $("#username-fill-field").text('UserName:\t');
                 $("#role-fill-field").text('Role:\t');
             }
@@ -190,10 +185,9 @@ var Account = function () {
                     window.location.hash = 'fan-section';
                     break;
                 case AccountRoles.UNAUTHORIZED:
-                    window.location.hash = 'welcome-screen';
+                    window.location.hash = 'login-screen';
                     break;
                 case AccountRoles.WRONG_USERNAME:
-                    alert('Wrong username!');
                     break;
                 default:
                     break;

@@ -1,18 +1,26 @@
 import Cookies from "./Cookies";
 import ConcertsProvider from "./ConcertsProvider";
+import BandProvider from "./BandProvider";
 
 /**
  * This class is only temporary till some backend will be developed.
  * */
 export default class Account {
     constructor(dataApi) {
-        this._dayaApi = dataApi;
+        this._dataApi = dataApi;
         //note that this is testing state
         this.activeUserNames = {
-            'bandAcc1': AccountRoles.BAND,
-            'bandAcc2': AccountRoles.BAND,
+            'poulicni': AccountRoles.BAND,
+            'rackBites': AccountRoles.BAND,
+            'fousy': AccountRoles.BAND,
             'fan1': AccountRoles.FAN,
             'fan2': AccountRoles.FAN
+        };
+
+        this._userToBandWirring = {
+            'poulicni' : 'Poulicni Lampa',
+            'rackBites' : 'Rack Bites',
+            'fousy' : 'Fousy'
         };
 
         this._hashToUsername = {};
@@ -105,8 +113,9 @@ export default class Account {
     }
 
     canAccessTag(tag) {
-        let role = this.currentLogedUser.role;
-        let possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
+        if(tag === 'not-found' || tag === 'login-screen') return true;
+        const role = this.currentLogedUser.role;
+        const possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
         return possibleSitesForRole.includes(tag);
     }
 
@@ -120,7 +129,11 @@ export default class Account {
             $("#username-fill-field").text('UserName:\t' + userName);
             $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
 
-            new ConcertsProvider(this._dayaApi.concertsApi).displayConcertsForFan();
+            if(userRole === AccountRoles.FAN){
+                new ConcertsProvider(this._dataApi.concertsApi).displayConcertsForFan();
+            } else if(userRole === AccountRoles.BAND){
+                new BandProvider(this._dataApi).displayDataForBand(this._userToBandWirring[userName]);
+            }
         } else if (userRole === AccountRoles.WRONG_USERNAME) {
             $('#username-input').val(' ').trigger('focus');
             Cookies.deleteCookie('userHash');

@@ -17,12 +17,13 @@ export default class HashChangeHandler {
     onHashChange(event) {
         let newUrl = event.originalEvent.newURL;
         let newSection = newUrl.split('#')[1];
-
         if (!this.account.canAccessTag(newSection)) {
             if (newSection === 'login-screen' && this.account.isLoggedIn()) {
                 newSection = 'welcome-screen';
+            } else if (newSection) {
+                newSection = 'not-found';
             } else {
-                newSection = newSection ? 'not-found' : 'welcome-screen';
+                newSection = 'login-screen'
             }
         }
 
@@ -39,5 +40,8 @@ export default class HashChangeHandler {
             $(currentClass).removeClass('active');
         }
         $(nextClass).addClass('active');
+        if (nextClass === '.login-screen') {
+            $('#username-input').trigger('focus');
+        }
     }
 }

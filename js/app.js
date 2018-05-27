@@ -20,19 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
         account.proceedToRolePage();
     });
 
-    // document.addEventListener('keypress', (ev) => {
-    //     if (ev.code === 'Enter') {
-    //         let input =$("#username-input");
-    //         account.loginAndShowPage(input.val());
-    //         input.val('');
-    //     }
-    // });
+    $("#username-input").on('keyup', (ev) => {
+        if (ev.originalEvent.code === 'Enter') {
+            let input = $("#username-input");
+            if(input !== ''){
+                account.loginAndShowPage(input.val());
+                input.val('');
+            }
+        }
+    });
 
     let hashChangeHandler = new HashChangeHandler(account);
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
-
-    console.log(api.bandApi.allBands);
-    console.log(api.pubApi.allPubs);
-
-    console.log(api.concertsApi.allConcerts);
 });

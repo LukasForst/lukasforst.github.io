@@ -16,6 +16,10 @@ var _ConcertsProvider = require("./ConcertsProvider");
 
 var _ConcertsProvider2 = _interopRequireDefault(_ConcertsProvider);
 
+var _BandProvider = require("./BandProvider");
+
+var _BandProvider2 = _interopRequireDefault(_BandProvider);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29,13 +33,20 @@ var Account = function () {
 
         _classCallCheck(this, Account);
 
-        this._dayaApi = dataApi;
+        this._dataApi = dataApi;
         //note that this is testing state
         this.activeUserNames = {
-            'bandAcc1': AccountRoles.BAND,
-            'bandAcc2': AccountRoles.BAND,
+            'poulicni': AccountRoles.BAND,
+            'rackBites': AccountRoles.BAND,
+            'fousy': AccountRoles.BAND,
             'fan1': AccountRoles.FAN,
             'fan2': AccountRoles.FAN
+        };
+
+        this._userToBandWirring = {
+            'poulicni': 'Poulicni Lampa',
+            'rackBites': 'Rack Bites',
+            'fousy': 'Fousy'
         };
 
         this._hashToUsername = {};
@@ -135,13 +146,14 @@ var Account = function () {
     }, {
         key: "canAccessTag",
         value: function canAccessTag(tag) {
+            if (tag === 'not-found' || tag === 'login-screen') return true;
             var role = this.currentLogedUser.role;
             var possibleSitesForRole = this.sitesPermissions[AccountRoles.ToString(role)];
             return possibleSitesForRole.includes(tag);
         }
     }, {
         key: "_setCurrentUser",
-        value: function _setCurrentUSsr(userRole, userName) {
+        value: function _setCurrentUser(userRole, userName) {
             this.currentLogedUser.role = userRole;
             this.currentLogedUser.username = userName;
 
@@ -151,7 +163,11 @@ var Account = function () {
                 $("#username-fill-field").text('UserName:\t' + userName);
                 $("#role-fill-field").text('Role:\t' + AccountRoles.ToString(userRole));
 
-                new _ConcertsProvider2.default(this._dayaApi.concertsApi).displayConcertsForFan();
+                if (userRole === AccountRoles.FAN) {
+                    new _ConcertsProvider2.default(this._dataApi.concertsApi).displayConcertsForFan();
+                } else if (userRole === AccountRoles.BAND) {
+                    new _BandProvider2.default(this._dataApi).displayDataForBand(this._userToBandWirring[userName]);
+                }
             } else if (userRole === AccountRoles.WRONG_USERNAME) {
                 $('#username-input').val(' ').trigger('focus');
                 _Cookies2.default.deleteCookie('userHash');
@@ -248,7 +264,37 @@ var AccountRoles = exports.AccountRoles = function () {
     return AccountRoles;
 }();
 
-},{"./ConcertsProvider":2,"./Cookies":3}],2:[function(require,module,exports){
+},{"./BandProvider":2,"./ConcertsProvider":3,"./Cookies":4}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BandProvider = function () {
+    function BandProvider(apiData) {
+        _classCallCheck(this, BandProvider);
+
+        this._apiData = apiData;
+    }
+
+    _createClass(BandProvider, [{
+        key: 'displayDataForBand',
+        value: function displayDataForBand(bandName) {
+            $('#name-band-section-header').text(bandName);
+        }
+    }]);
+
+    return BandProvider;
+}();
+
+exports.default = BandProvider;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -394,7 +440,7 @@ var ConcertsProvider = function () {
 
 exports.default = ConcertsProvider;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -447,7 +493,7 @@ var Cookies = function () {
 
 exports.default = Cookies;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -481,12 +527,13 @@ var HashChangeHandler = function () {
         value: function onHashChange(event) {
             var newUrl = event.originalEvent.newURL;
             var newSection = newUrl.split('#')[1];
-
             if (!this.account.canAccessTag(newSection)) {
                 if (newSection === 'login-screen' && this.account.isLoggedIn()) {
                     newSection = 'welcome-screen';
+                } else if (newSection) {
+                    newSection = 'not-found';
                 } else {
-                    newSection = newSection ? 'not-found' : 'welcome-screen';
+                    newSection = 'login-screen';
                 }
             }
 
@@ -504,6 +551,9 @@ var HashChangeHandler = function () {
                 $(currentClass).removeClass('active');
             }
             $(nextClass).addClass('active');
+            if (nextClass === '.login-screen') {
+                $('#username-input').trigger('focus');
+            }
         }
     }]);
 
@@ -512,7 +562,7 @@ var HashChangeHandler = function () {
 
 exports.default = HashChangeHandler;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -545,7 +595,7 @@ var ApiData = function ApiData() {
 
 exports.default = ApiData;
 
-},{"./BandsApi":7,"./ConcertsApi":9,"./PubsApi":12}],6:[function(require,module,exports){
+},{"./BandsApi":8,"./ConcertsApi":10,"./PubsApi":13}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -577,7 +627,7 @@ var Band = function () {
 
 exports.default = Band;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -660,7 +710,7 @@ var BandsApiMock = function () {
     return BandsApiMock;
 }();
 
-},{"./Band":6}],8:[function(require,module,exports){
+},{"./Band":7}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -681,7 +731,7 @@ var Concert = function Concert(id, performingBand, date, place, playlist) {
 
 exports.default = Concert;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -803,7 +853,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-},{"./Concert":8,"./Playlist":10,"./Song":13}],10:[function(require,module,exports){
+},{"./Concert":9,"./Playlist":11,"./Song":14}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -876,7 +926,7 @@ var Playlist = function () {
 
 exports.default = Playlist;
 
-},{"./Song":13}],11:[function(require,module,exports){
+},{"./Song":14}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -907,7 +957,7 @@ var Pub = function () {
 
 exports.default = Pub;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -979,7 +1029,7 @@ var PubApiMock = function () {
     return PubApiMock;
 }();
 
-},{"./Pub":11}],13:[function(require,module,exports){
+},{"./Pub":12}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1032,7 +1082,7 @@ var Song = function () {
 
 exports.default = Song;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var _Account = require("./Account");
@@ -1069,23 +1119,20 @@ document.addEventListener("DOMContentLoaded", function () {
         account.proceedToRolePage();
     });
 
-    // document.addEventListener('keypress', (ev) => {
-    //     if (ev.code === 'Enter') {
-    //         let input =$("#username-input");
-    //         account.loginAndShowPage(input.val());
-    //         input.val('');
-    //     }
-    // });
+    $("#username-input").on('keyup', function (ev) {
+        if (ev.originalEvent.code === 'Enter') {
+            var input = $("#username-input");
+            if (input !== '') {
+                account.loginAndShowPage(input.val());
+                input.val('');
+            }
+        }
+    });
 
     var hashChangeHandler = new _HashChangeHandler2.default(account);
     $(window).on('hashchange', function (ev) {
         return hashChangeHandler.onHashChange(ev);
     });
-
-    console.log(api.bandApi.allBands);
-    console.log(api.pubApi.allPubs);
-
-    console.log(api.concertsApi.allConcerts);
 });
 
-},{"./Account":1,"./HashChangeHandler":4,"./api/ApiData":5}]},{},[14]);
+},{"./Account":1,"./HashChangeHandler":5,"./api/ApiData":6}]},{},[15]);

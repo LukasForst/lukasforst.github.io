@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" manifest="kaj-tp.manifest">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Ultimate band tool</title>
+
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+
+    <script src="js/libraries/jquery-3.3.1.min.js"></script>
+    <script src="js/libraries/jquery-ui.min.js"></script>
+    <script src="js/libraries/jquery.ui.touch-punch.min.js"></script>
+    <script src="js/compiled/app.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="main-nav">
+    <div class="container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a id="your-profile-link" class="nav-link" href="">Concerts</a>
+                </li>
+                <li class="nav-item">
+                    <a id="welcome-screen-link" class="nav-link" href="">Account</a>
+                </li>
+                <li class="nav-item">
+                    <a id="log-out-link" class="nav-link" href="">Log out</a>
+                </li>
+                <li class="nav-item">
+                    <a id="log-in-link" class="nav-link" href="">Log in</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section id="login-screen" class="login-screen screen">
+    <h6 style="display: none;">Login screen</h6>
+    <div class="overlay"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-sm-4 col-6 mx-auto">
+                <label for="username-input">Please enter your username.</label>
+                <input id="username-input" type="text" class="form-control" autofocus>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <button id="login-button" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="welcome-screen" class="screen welcome-screen">
+    <h6 style="display: none;">Welcome screen</h6>
+    <div class="overlay"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mx-auto">
+                You are logged in!
+            </div>
+            <div class="col mx-auto">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="username-fill-field"></div>
+                    </div>
+                    <div class="row mt-1">
+                        <div id="role-fill-field"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col mx-auto">
+                <button id="proceed-to-role-page-btn" class="btn">Proceed!</button>
+            </div>
+            <div class="col mx-auto">
+                <button id="log-out" class="btn">Log out.</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="band-section" class="screen band-section">
+    <h6 style="display: none;">Band section</h6>
+    <div class="overlay"></div>
+    <div class="container-fluid">
+        <div class="row my-auto">
+            <div class="col my-auto">
+                <h4 id="name-band-section-header">Band name</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mx-auto my-auto">
+                Edit band data.
+            </div>
+            <div class="col mx-auto my-auto">
+                There will be band playlists.
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col mx-auto my-auto">
+                There will be current playlist.
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="universal-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="universal-modal-header" class="modal-title">Header</h4>
+            </div>
+            <div id="universal-modal-body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id='close-and-save-modal-button' type="button" class="btn btn-default">Close and save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="fan-section" class="screen fan-section">
+    <h6 style="display: none;">Fan section</h6>
+    <div class="overlay"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                Please select one of these concerts.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mx-auto">
+                <input id="concerts-search-bar" type="text" class="search-bar form-control mx-auto"
+                       placeholder="Search for...">
+            </div>
+        </div>
+        <div class="row concert-list mt-5 mx-auto">
+            <ul id="concert-list" class="list-group mx-auto"></ul>
+        </div>
+    </div>
+</section>
+
+<section id="not-found" class="screen not-found">
+    <h1>Not found!</h1>
+    <div class="overlay"></div>
+</section>
+</body>
+</html>

@@ -22,5 +22,30 @@ commit [here](https://github.com/LukasForst/lukasforst.github.io/commit/603bfc18
 - all css are merged to the file `css/app.css`
 
 # Documentation
-Please see documentation in dedicated folder
-[here](https://github.com/LukasForst/lukasforst.github.io/tree/master/documentation).
+Please see documentation in dedicated folder [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/documentation).
+
+# Features
+According to the [this table](https://docs.google.com/spreadsheets/d/18rSiofsqOHGTXj_Zbs1s-rtB2URXG4iUmxn_5JtwWDY/edit#gid=0).
+Name | Result | Note
+--- | --- | ---
+Validita | Yes | validator.w3.com says it is OK
+Validita | Yes | cross browser (tested on Firefox, Chrome, Opera, Edge)
+Semantické značky | Maybe | I would say, that it is OK, but don't know
+Grafika - SVG / Canvas | No | I don't use Canvas nor SVG
+Média - Audio/Video | No | Same
+Formulářové prvky | Yes | Search bar and login with autofocus
+Offline aplikace | Maybe | It detects offline state but offline offline manifest is not used
+Pokročilé selektory | Yes | There are plenty of them, see [`scss`](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss) folder
+Vendor prefixy | Yes | I use standard things but I placed it [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_sections.scss) just in case
+CSS3 transformace 2D/3D | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_sections.scss)
+CSS3 transitions/animations | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_sections.scss)
+Media queries | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_navbar.scss)
+OOP přístup | Yes | classes are everywhere
+Použití JS frameworku či knihovny | Yes | jQuery, grunt, babel, google maps...
+Použití pokročilých JS API | Yes | Drag'n Drop, Geolocation
+Funkční historie | Yes | I use `#` for navigating so browser history is working very well -> back, forward is no problem
+Ovládání medií | No | 
+Offline aplikace | Maybe | I check state over [there](https://github.com/LukasForst/lukasforst.github.io/blob/master/js/HashChangeHandler.js)
+JS práce se SVG | No |
+
+And of course, it has gread documentation [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/documentation).

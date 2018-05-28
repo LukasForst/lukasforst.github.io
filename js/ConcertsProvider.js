@@ -28,8 +28,7 @@ export default class ConcertsProvider {
     }
 
     _updateValuesAfterClose() {
-        $('#real-song-dropzone').remove();
-        const sorted = $(`#song-dropzone-list`);
+        const sorted = $(`#songs-in-list`);
         sorted.children().each((index, value) => {
             const songId = parseInt(value.id.split('-')[3]);
             this._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
@@ -46,45 +45,17 @@ export default class ConcertsProvider {
         modalBody.html('');
 
         const draggables = $(`<div class="row"></div>`);
-        const dropables = $(`<div class="row"></div>`);
-        dropables.append($(`<ul id="song-dropzone-list" class="list-group list-group-flush mx-auto my-auto"></ul>`));
-        modalBody.append($(`<div class="container-fluid"></div>`).append(dropables).append(draggables));
-        this._createNextZoneToDrop();
+        modalBody.append($(`<div class="container-fluid"></div>`).append(draggables));
 
-        const dragableList = $(`<ul id='songs-in-list' class="list-group mx-auto my-auto"></ul>`);
+        const dragableList = $(`<ul id='songs-in-list' class="list-group mx-auto my-auto"></ul>`).sortable().disableSelection();
         concert.playlist.sortedPlaylist.forEach((value, index) => {
-            const element = $(`<li id='song-group-item-${value.id}' class='list-group-item' draggable='true'></li>`);
+            const element = $(`<li id='song-group-item-${value.id}' class='list-group-item'></li>`);
             element.text(value.authorBandName + ' - ' + value.name);
-            element.on('dragstart', (event) => event.originalEvent.dataTransfer.setData("song", event.target.id));
             dragableList.append(element);
         });
 
         draggables.append(dragableList);
         $("#universal-modal").modal("toggle");
-    }
-
-    _createNextZoneToDrop() {
-        const list = $(`#song-dropzone-list`);
-        $('#real-song-dropzone').remove();
-        const li = $(`<li id='real-song-dropzone' class="list-group-item mx-auto my-auto"></li>`);
-        li.text('Drop all sorted music here!');
-        li.on('drop', (e) => this._drop(e.originalEvent));
-        li.on('dragover', (e) => e.preventDefault());
-        list.append(li);
-    }
-
-    _drop(event) {
-        event.preventDefault();
-        const data = event.dataTransfer.getData("song");
-        const list = $(`#song-dropzone-list`);
-        list.append($(`#${data}`));
-
-        const songsLins = $(`#songs-in-list`);
-        if (songsLins.children().length !== 0) {
-            this._createNextZoneToDrop();
-        } else {
-            $('#real-song-dropzone').remove();
-        }
     }
 
     _addSearchListener() {
@@ -101,9 +72,5 @@ export default class ConcertsProvider {
 
         const searchBar = $("#concerts-search-bar");
         searchBar.on('keydown', (event) => callback(event));
-    }
-
-    showConcertData() {
-
     }
 }

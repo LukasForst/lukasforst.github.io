@@ -337,8 +337,7 @@ var ConcertsProvider = function () {
         value: function _updateValuesAfterClose() {
             var _this2 = this;
 
-            $('#real-song-dropzone').remove();
-            var sorted = $('#song-dropzone-list');
+            var sorted = $('#songs-in-list');
             sorted.children().each(function (index, value) {
                 var songId = parseInt(value.id.split('-')[3]);
                 _this2._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
@@ -356,55 +355,17 @@ var ConcertsProvider = function () {
             modalBody.html('');
 
             var draggables = $('<div class="row"></div>');
-            var dropables = $('<div class="row"></div>');
-            dropables.append($('<ul id="song-dropzone-list" class="list-group list-group-flush mx-auto my-auto"></ul>'));
-            modalBody.append($('<div class="container-fluid"></div>').append(dropables).append(draggables));
-            this._createNextZoneToDrop();
+            modalBody.append($('<div class="container-fluid"></div>').append(draggables));
 
-            var dragableList = $('<ul id=\'songs-in-list\' class="list-group mx-auto my-auto"></ul>');
+            var dragableList = $('<ul id=\'songs-in-list\' class="list-group mx-auto my-auto"></ul>').sortable().disableSelection();
             concert.playlist.sortedPlaylist.forEach(function (value, index) {
-                var element = $('<li id=\'song-group-item-' + value.id + '\' class=\'list-group-item\' draggable=\'true\'></li>');
+                var element = $('<li id=\'song-group-item-' + value.id + '\' class=\'list-group-item\'></li>');
                 element.text(value.authorBandName + ' - ' + value.name);
-                element.on('dragstart', function (event) {
-                    return event.originalEvent.dataTransfer.setData("song", event.target.id);
-                });
                 dragableList.append(element);
             });
 
             draggables.append(dragableList);
             $("#universal-modal").modal("toggle");
-        }
-    }, {
-        key: '_createNextZoneToDrop',
-        value: function _createNextZoneToDrop() {
-            var _this3 = this;
-
-            var list = $('#song-dropzone-list');
-            $('#real-song-dropzone').remove();
-            var li = $('<li id=\'real-song-dropzone\' class="list-group-item mx-auto my-auto"></li>');
-            li.text('Drop all sorted music here!');
-            li.on('drop', function (e) {
-                return _this3._drop(e.originalEvent);
-            });
-            li.on('dragover', function (e) {
-                return e.preventDefault();
-            });
-            list.append(li);
-        }
-    }, {
-        key: '_drop',
-        value: function _drop(event) {
-            event.preventDefault();
-            var data = event.dataTransfer.getData("song");
-            var list = $('#song-dropzone-list');
-            list.append($('#' + data));
-
-            var songsLins = $('#songs-in-list');
-            if (songsLins.children().length !== 0) {
-                this._createNextZoneToDrop();
-            } else {
-                $('#real-song-dropzone').remove();
-            }
         }
     }, {
         key: '_addSearchListener',
@@ -425,9 +386,6 @@ var ConcertsProvider = function () {
                 return callback(event);
             });
         }
-    }, {
-        key: 'showConcertData',
-        value: function showConcertData() {}
     }]);
 
     return ConcertsProvider;

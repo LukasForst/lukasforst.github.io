@@ -42,7 +42,7 @@ Vendor prefixy | Yes | I use standard things but I placed it [here](https://gith
 CSS3 transformace 2D/3D | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_sections.scss)
 CSS3 transitions/animations | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_sections.scss)
 Media queries | Yes | [here](https://github.com/LukasForst/lukasforst.github.io/tree/master/scss/_navbar.scss)
-OOP přístup | Yes | classes are everywhere
+OOP přístup | Yes | classes are everywhere, inheritence in [API](https://github.com/LukasForst/lukasforst.github.io/tree/master/js/api)
 Použití JS frameworku či knihovny | Yes | jQuery, grunt, babel, google maps...
 Použití pokročilých JS API | Yes | Drag'n Drop, Geolocation
 Funkční historie | Yes | I use `#` for navigating so browser history is working very well -> back, forward is no problem

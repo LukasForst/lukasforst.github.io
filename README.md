@@ -26,6 +26,8 @@ Please see documentation in dedicated folder [here](https://github.com/LukasFors
 
 # Features
 According to the [this table](https://docs.google.com/spreadsheets/d/18rSiofsqOHGTXj_Zbs1s-rtB2URXG4iUmxn_5JtwWDY/edit#gid=0).
+
+
 Name | Result | Note
 --- | --- | ---
 Validita | Yes | validator.w3.com says it is OK

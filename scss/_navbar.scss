@@ -1,0 +1,77 @@
+@import "colors";
+
+nav {
+  border-bottom: 1px solid fade-out(white, .9);
+  background-color: $navbar-backgrount;
+
+  .navbar-brand {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $gray-400;
+
+    &:focus,
+    &:hover {
+      color: darken($white, .1);
+    }
+  }
+
+  .navbar-nav {
+    > li.nav-item {
+      > a.nav-link,
+      > a.nav-link:focus {
+        font-size: .9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: $gray-400;
+        &:hover {
+          color: $white;
+        }
+        &.active {
+          color: $white !important;
+          background-color: transparent;
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+  @media (min-width: 400px) {
+    border-color: transparent;
+    background-color: $navbar-backgrount;
+    opacity: 0.8;
+    .navbar-brand {
+      color: fade-out($gray-400, .3);
+      &:focus,
+      &:hover {
+        color: $white;
+      }
+    }
+    .navbar-nav > li.nav-item > a.nav-link {
+      padding: 0.5rem 1rem;
+    }
+    .navbar-nav > li.nav-item > a.nav-link,
+    .navbar-nav > li.nav-item > a.nav-link:focus {
+      color: fade-out($gray-400, .3);
+      &:hover {
+        color: $white;
+      }
+    }
+    &.navbar-shrink {
+      .navbar-brand {
+        color: $gray-400;
+        &:focus,
+        &:hover {
+          color: darken($white, .1);
+        }
+      }
+      .navbar-nav > li.nav-item > a.nav-link,
+      .navbar-nav > li.nav-item > a.nav-link:focus {
+        color: $gray-400;
+        &:hover {
+          color: $white;
+        }
+      }
+    }
+  }
+}

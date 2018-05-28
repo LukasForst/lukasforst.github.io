@@ -10,7 +10,7 @@ export default class MapProvider {
         const mapProp = {
             //default center at city of Domazlice
             center: new google.maps.LatLng(49.4397027, 12.931143499999962),
-            zoom: 16,
+            zoom: 13,
         };
         this.map = new google.maps.Map(mapDiv.get(0), mapProp);
 

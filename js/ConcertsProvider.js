@@ -6,6 +6,7 @@ export default class ConcertsProvider {
 
     displayConcertsForFan() {
         const listHolder = $("#concert-list");
+        listHolder.html('');
         const concerts = this._concertsApi.allConcerts;
         concerts.sort((a, b) => a.date - b.date);
 

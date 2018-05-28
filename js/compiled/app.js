@@ -313,6 +313,7 @@ var ConcertsProvider = function () {
             var _this = this;
 
             var listHolder = $("#concert-list");
+            listHolder.html('');
             var concerts = this._concertsApi.allConcerts;
             concerts.sort(function (a, b) {
                 return a.date - b.date;
@@ -585,7 +586,7 @@ var MapProvider = function () {
             var mapProp = {
                 //default center at city of Domazlice
                 center: new google.maps.LatLng(49.4397027, 12.931143499999962),
-                zoom: 16
+                zoom: 13
             };
             this.map = new google.maps.Map(mapDiv.get(0), mapProp);
 
@@ -674,7 +675,6 @@ var MapProvider = function () {
                     };
 
                     var icon = {
-                        // url: "http://www.tourismstcatharines.ca/wp-content/themes/tourism/images/you-are-here-icon.png",
                         url: "img/you-are-here-icon.png",
                         scaledSize: new google.maps.Size(60, 60)
                     };
@@ -1252,11 +1252,13 @@ document.addEventListener("DOMContentLoaded", function () {
     $("#login-button").on('click', function (ev) {
         var input = $("#username-input");
         account.loginAndShowPage(input.val());
+        setUpNavBar(account, map);
         input.val('');
     });
 
     $('#log-out').on('click', function (ev) {
-        return account.logout();
+        account.logout();
+        setUpNavBar(account, map);
     });
 
     var map = new _MapProvider2.default(api.concertsApi);
@@ -1266,7 +1268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     $("#proceed-to-role-page-btn").on('click', function (ev) {
-        account.proceedToRolePage();
+        return account.proceedToRolePage();
     });
 
     $("#username-input").on('keyup', function (ev) {
@@ -1274,15 +1276,55 @@ document.addEventListener("DOMContentLoaded", function () {
             var input = $("#username-input");
             if (input !== '') {
                 account.loginAndShowPage(input.val());
+                setUpNavBar(account, map);
                 input.val('');
             }
         }
     });
+
+    setUpNavBar(account, map);
 
     var hashChangeHandler = new _HashChangeHandler2.default(account);
     $(window).on('hashchange', function (ev) {
         return hashChangeHandler.onHashChange(ev);
     });
 });
+
+function setUpNavBar(account, mapProvider) {
+    var yourProfile = $("#your-profile-link");
+    yourProfile.off().on('click', function (ev) {
+        ev.preventDefault();
+        account.proceedToRolePage();
+    });
+
+    var logout = $('#log-out-link');
+    logout.off().on('click', function (ev) {
+        ev.preventDefault();
+        account.logout();
+        setUpNavBar(account, mapProvider);
+    });
+
+    var welcomeScreen = $('#welcome-screen-link');
+    welcomeScreen.off().on('click', function (ev) {
+        ev.preventDefault();
+        window.location.hash = 'welcome-screen';
+    });
+
+    $('#map-link').off().on('click', function (ev) {
+        ev.preventDefault();
+        window.location.hash = 'map-section';
+        mapProvider.showMap(true);
+    });
+
+    if (!account.isLoggedIn()) {
+        yourProfile.css('display', 'none');
+        welcomeScreen.css('display', 'none');
+        logout.css('display', 'none');
+    } else {
+        yourProfile.css('display', '');
+        welcomeScreen.css('display', '');
+        logout.css('display', '');
+    }
+}
 
 },{"./Account":1,"./HashChangeHandler":5,"./MapProvider":6,"./api/ApiData":7}]},{},[16]);

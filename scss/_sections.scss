@@ -13,9 +13,7 @@ section.screen {
   align-items: center;
 
   background-size: cover;
-  background-image: url("../img/band_live.jpg");
-  background-color: #1d2124;
-  background-repeat: no-repeat;
+  background: #1d2124 url("../img/band_live.jpg") no-repeat;
 
   z-index: 1;
 
@@ -30,6 +28,10 @@ section.screen {
   &.active {
     transition: transform 500ms;
     transform: translate3d(0,0,0);
+  }
+
+  &:not(.active){
+    visibility: hidden;
   }
 
   & .overlay {

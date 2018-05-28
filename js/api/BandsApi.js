@@ -7,9 +7,9 @@ class BandsApiMock {
     }
 
     _populate() {
-        this.addBand(new Band(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
-        this.addBand(new Band(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
-        this.addBand(new Band(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
+        this._bands.push(new Band(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
+        this._bands.push(new Band(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
+        this._bands.push(new Band(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
     }
 }
 

@@ -31,7 +31,9 @@ export default class ConcertsProvider {
         const sorted = $(`#songs-in-list`);
         sorted.children().each((index, value) => {
             const songId = parseInt(value.id.split('-')[3]);
-            this._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
+            if(this._currentDisplayedConcert) {
+                this._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
+            }
         });
 
         $('#universal-modal').modal('hide');
@@ -47,7 +49,9 @@ export default class ConcertsProvider {
         const draggables = $(`<div class="row"></div>`);
         modalBody.append($(`<div class="container-fluid"></div>`).append(draggables));
 
-        const dragableList = $(`<ul id='songs-in-list' class="list-group mx-auto my-auto"></ul>`).sortable().disableSelection();
+        const dragableList = $(`<ul id='songs-in-list' class="list-group mx-auto my-auto"></ul>`)
+            .sortable()
+            .disableSelection();
         concert.playlist.sortedPlaylist.forEach((value, index) => {
             const element = $(`<li id='song-group-item-${value.id}' class='list-group-item'></li>`);
             element.text(value.authorBandName + ' - ' + value.name);

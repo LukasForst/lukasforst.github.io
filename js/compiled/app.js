@@ -340,7 +340,9 @@ var ConcertsProvider = function () {
             var sorted = $('#songs-in-list');
             sorted.children().each(function (index, value) {
                 var songId = parseInt(value.id.split('-')[3]);
-                _this2._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
+                if (_this2._currentDisplayedConcert) {
+                    _this2._currentDisplayedConcert.playlist.addPointsForSong(songId, sorted.children().length - index);
+                }
             });
 
             $('#universal-modal').modal('hide');

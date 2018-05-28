@@ -708,7 +708,7 @@ var ApiData = function ApiData() {
 
     this.bandApi = new _BandsApi2.default();
     this.pubApi = new _PubsApi2.default();
-    this.concertsApi = new _ConcertsApi2.default(this.pubApi, this.bandApi);
+    this.concertsApi = new _ConcertsApi2.default(this.pubApi.allPubs, this.bandApi.allBands);
 };
 
 exports.default = ApiData;
@@ -760,36 +760,11 @@ var _Band2 = _interopRequireDefault(_Band);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BandsApi = function () {
-    function BandsApi() {
-        _classCallCheck(this, BandsApi);
-
-        this._mock = new BandsApiMock();
-    }
-
-    _createClass(BandsApi, [{
-        key: 'addBand',
-        value: function addBand(band) {
-            this._mock.addBand(band);
-        }
-    }, {
-        key: 'removeBand',
-        value: function removeBand(bandId) {
-            this._mock.removeBand(bandId);
-        }
-    }, {
-        key: 'allBands',
-        get: function get() {
-            return this._mock.allBands;
-        }
-    }]);
-
-    return BandsApi;
-}();
-
-exports.default = BandsApi;
 
 var BandsApiMock = function () {
     function BandsApiMock() {
@@ -806,7 +781,21 @@ var BandsApiMock = function () {
             this.addBand(new _Band2.default(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
             this.addBand(new _Band2.default(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
         }
-    }, {
+    }]);
+
+    return BandsApiMock;
+}();
+
+var BandsApi = function (_BandsApiMock) {
+    _inherits(BandsApi, _BandsApiMock);
+
+    function BandsApi() {
+        _classCallCheck(this, BandsApi);
+
+        return _possibleConstructorReturn(this, (BandsApi.__proto__ || Object.getPrototypeOf(BandsApi)).call(this));
+    }
+
+    _createClass(BandsApi, [{
         key: 'addBand',
         value: function addBand(band) {
             this._bands.push(band);
@@ -825,8 +814,10 @@ var BandsApiMock = function () {
         }
     }]);
 
-    return BandsApiMock;
-}();
+    return BandsApi;
+}(BandsApiMock);
+
+exports.default = BandsApi;
 
 },{"./Band":8}],10:[function(require,module,exports){
 "use strict";
@@ -855,6 +846,7 @@ exports.default = Concert;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.ConcertsApiMock = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -872,72 +864,31 @@ var _Playlist2 = _interopRequireDefault(_Playlist);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ConcertsApi = function () {
-    function ConcertsApi(pubApi, bandApi) {
-        _classCallCheck(this, ConcertsApi);
-
-        this._mock = new ConcertsApiMock(pubApi, bandApi);
-    }
-
-    _createClass(ConcertsApi, [{
-        key: "addConcert",
-        value: function addConcert(concert) {
-            this._mock.addConcert(concert);
-        }
-    }, {
-        key: "getConcertsForBand",
-        value: function getConcertsForBand(bandId) {
-            return this._mock.getConcertsForBand(bandId);
-        }
-    }, {
-        key: "allConcerts",
-        get: function get() {
-            return this._mock.allConcerts;
-        }
-    }]);
-
-    return ConcertsApi;
-}();
-
-exports.default = ConcertsApi;
-
-var ConcertsApiMock = function () {
-    function ConcertsApiMock(pubApi, bandApi) {
+var ConcertsApiMock = exports.ConcertsApiMock = function () {
+    function ConcertsApiMock(allPubs, allBands) {
         _classCallCheck(this, ConcertsApiMock);
 
         this._concerts = [];
-        this._populate(pubApi.allPubs, bandApi.allBands);
+        this._populate(allPubs, allBands);
     }
 
     _createClass(ConcertsApiMock, [{
         key: "_populate",
         value: function _populate(pubs, bands) {
-            this.addConcert(new _Concert2.default(1, bands[getRandomInt(0, bands.length - 1)], new Date('May 18, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(6)));
+            this._concerts = [];
+            this._concerts.push(new _Concert2.default(1, bands[getRandomInt(0, bands.length - 1)], new Date('May 18, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(6)));
 
-            this.addConcert(new _Concert2.default(2, bands[getRandomInt(0, bands.length - 1)], new Date('May 20, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(6)));
+            this._concerts.push(new _Concert2.default(2, bands[getRandomInt(0, bands.length - 1)], new Date('May 20, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(6)));
 
-            this.addConcert(new _Concert2.default(3, bands[getRandomInt(0, bands.length - 1)], new Date('May 21, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(4)));
+            this._concerts.push(new _Concert2.default(3, bands[getRandomInt(0, bands.length - 1)], new Date('May 21, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(4)));
 
-            this.addConcert(new _Concert2.default(4, bands[getRandomInt(0, bands.length - 1)], new Date('May 22, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(8)));
-        }
-    }, {
-        key: "addConcert",
-        value: function addConcert(concert) {
-            this._concerts.push(concert);
-        }
-    }, {
-        key: "getConcertsForBand",
-        value: function getConcertsForBand(bandId) {
-            return this._concerts.filter(function (x) {
-                return x.performingBand.id === bandId;
-            });
-        }
-    }, {
-        key: "allConcerts",
-        get: function get() {
-            return this._concerts;
+            this._concerts.push(new _Concert2.default(4, bands[getRandomInt(0, bands.length - 1)], new Date('May 22, 2018 20:00:00'), pubs[getRandomInt(0, pubs.length - 1)], generatePlayList(8)));
         }
     }]);
 
@@ -970,6 +921,39 @@ function generateSong() {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+var ConcertsApi = function (_ConcertsApiMock) {
+    _inherits(ConcertsApi, _ConcertsApiMock);
+
+    function ConcertsApi(allPubs, allBands) {
+        _classCallCheck(this, ConcertsApi);
+
+        return _possibleConstructorReturn(this, (ConcertsApi.__proto__ || Object.getPrototypeOf(ConcertsApi)).call(this, allPubs, allBands));
+    }
+
+    _createClass(ConcertsApi, [{
+        key: "getConcertsForBand",
+        value: function getConcertsForBand(bandId) {
+            return this.allConcerts.filter(function (x) {
+                return x.performingBand.id === bandId;
+            });
+        }
+    }, {
+        key: "addConcert",
+        value: function addConcert(concert) {
+            this._concerts.push(concert);
+        }
+    }, {
+        key: "allConcerts",
+        get: function get() {
+            return this._concerts;
+        }
+    }]);
+
+    return ConcertsApi;
+}(ConcertsApiMock);
+
+exports.default = ConcertsApi;
 
 },{"./Concert":10,"./Playlist":12,"./Song":15}],12:[function(require,module,exports){
 "use strict";
@@ -1092,31 +1076,11 @@ var _Pub2 = _interopRequireDefault(_Pub);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PubsApi = function () {
-    function PubsApi() {
-        _classCallCheck(this, PubsApi);
-
-        this._mock = new PubApiMock();
-    }
-
-    _createClass(PubsApi, [{
-        key: 'addPub',
-        value: function addPub(pub) {
-            this._mock.addPub(pub);
-        }
-    }, {
-        key: 'allPubs',
-        get: function get() {
-            return this._mock.allPubs;
-        }
-    }]);
-
-    return PubsApi;
-}();
-
-exports.default = PubsApi;
 
 var PubApiMock = function () {
     function PubApiMock() {
@@ -1129,12 +1093,26 @@ var PubApiMock = function () {
     _createClass(PubApiMock, [{
         key: '_populate',
         value: function _populate() {
-            this.addPub(new _Pub2.default(1, 'Peters Pub', 49.4416424, 12.929870499999993));
-            this.addPub(new _Pub2.default(2, 'JazzRock Cafe', 49.43951250000001, 12.929611099999988));
-            this.addPub(new _Pub2.default(3, 'RockClub', 49.4397027, 12.931143499999962));
-            this.addPub(new _Pub2.default(4, 'MKS', 49.440131, 12.930489999999963));
+            this._pubs.push(new _Pub2.default(1, 'Peters Pub', 49.4416424, 12.929870499999993));
+            this._pubs.push(new _Pub2.default(2, 'JazzRock Cafe', 49.43951250000001, 12.929611099999988));
+            this._pubs.push(new _Pub2.default(3, 'RockClub', 49.4397027, 12.931143499999962));
+            this._pubs.push(new _Pub2.default(4, 'MKS', 49.440131, 12.930489999999963));
         }
-    }, {
+    }]);
+
+    return PubApiMock;
+}();
+
+var PubsApi = function (_PubApiMock) {
+    _inherits(PubsApi, _PubApiMock);
+
+    function PubsApi() {
+        _classCallCheck(this, PubsApi);
+
+        return _possibleConstructorReturn(this, (PubsApi.__proto__ || Object.getPrototypeOf(PubsApi)).call(this));
+    }
+
+    _createClass(PubsApi, [{
         key: 'addPub',
         value: function addPub(pub) {
             this._pubs.push(pub);
@@ -1146,8 +1124,10 @@ var PubApiMock = function () {
         }
     }]);
 
-    return PubApiMock;
-}();
+    return PubsApi;
+}(PubApiMock);
+
+exports.default = PubsApi;
 
 },{"./Pub":13}],15:[function(require,module,exports){
 'use strict';

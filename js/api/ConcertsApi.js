@@ -2,32 +2,15 @@ import Concert from "./Concert";
 import Song from "./Song";
 import Playlist from "./Playlist";
 
-export default class ConcertsApi {
-    constructor(pubApi, bandApi) {
-        this._mock = new ConcertsApiMock(pubApi, bandApi);
-    }
-
-    get allConcerts() {
-        return this._mock.allConcerts;
-    }
-
-    addConcert(concert) {
-        this._mock.addConcert(concert);
-    }
-
-    getConcertsForBand(bandId) {
-        return this._mock.getConcertsForBand(bandId)
-    }
-}
-
-class ConcertsApiMock {
-    constructor(pubApi, bandApi) {
+export class ConcertsApiMock {
+    constructor(allPubs, allBands) {
         this._concerts = [];
-        this._populate(pubApi.allPubs, bandApi.allBands);
+        this._populate(allPubs, allBands);
     }
 
     _populate(pubs, bands) {
-        this.addConcert(
+        this._concerts = [];
+        this._concerts.push(
             new Concert(
                 1,
                 bands[getRandomInt(0, bands.length - 1)],
@@ -36,7 +19,7 @@ class ConcertsApiMock {
                 generatePlayList(6))
         );
 
-        this.addConcert(
+        this._concerts.push(
             new Concert(
                 2,
                 bands[getRandomInt(0, bands.length - 1)],
@@ -45,7 +28,7 @@ class ConcertsApiMock {
                 generatePlayList(6))
         );
 
-        this.addConcert(
+        this._concerts.push(
             new Concert(
                 3,
                 bands[getRandomInt(0, bands.length - 1)],
@@ -54,7 +37,7 @@ class ConcertsApiMock {
                 generatePlayList(4)
             ));
 
-        this.addConcert(
+        this._concerts.push(
             new Concert(
                 4,
                 bands[getRandomInt(0, bands.length - 1)],
@@ -62,19 +45,6 @@ class ConcertsApiMock {
                 pubs[getRandomInt(0, pubs.length - 1)],
                 generatePlayList(8))
         );
-    }
-
-
-    get allConcerts() {
-        return this._concerts;
-    }
-
-    addConcert(concert) {
-        this._concerts.push(concert);
-    }
-
-    getConcertsForBand(bandId) {
-        return this._concerts.filter(x => x.performingBand.id === bandId)
     }
 }
 
@@ -108,4 +78,23 @@ function generateSong() {
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+export default class ConcertsApi extends ConcertsApiMock {
+    constructor(allPubs, allBands) {
+        super(allPubs, allBands);
+    }
+
+    get allConcerts() {
+        return this._concerts;
+    }
+
+    getConcertsForBand(bandId) {
+        return this.allConcerts.filter(x => x.performingBand.id === bandId)
+    }
+
+    addConcert(concert) {
+        this._concerts.push(concert);
+    }
 }

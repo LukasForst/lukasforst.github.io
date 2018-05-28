@@ -61,6 +61,12 @@ function setUpNavBar(account, mapProvider){
         setUpNavBar(account, mapProvider);
     });
 
+    const logIn = $('#log-in-link');
+    logIn.off().on('click', (ev) => {
+        ev.preventDefault();
+        window.location.hash = 'login-screen';
+    });
+
     const welcomeScreen = $('#welcome-screen-link');
     welcomeScreen.off().on('click', (ev) => {
         ev.preventDefault();
@@ -77,9 +83,13 @@ function setUpNavBar(account, mapProvider){
         yourProfile.css('display', 'none');
         welcomeScreen.css('display', 'none');
         logout.css('display', 'none');
+
+        logIn.css('display', '');
     } else {
         yourProfile.css('display', '');
         welcomeScreen.css('display', '');
         logout.css('display', '');
+
+        logIn.css('display', 'none');
     }
 }

@@ -1,0 +1,10 @@
+CACHE MANIFEST
+
+index.html
+css/app.css
+css/bootstrap/bootstrap.css
+js/libraries/jquery-3.3.1.min.js
+js/libraries/jquery-ui.min.js
+js/libraries/jquery.ui.touch-punch.min.js
+js/compiled/app.js
+js/bootstrap/bootstrap.min.js

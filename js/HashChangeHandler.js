@@ -45,7 +45,11 @@ export default class HashChangeHandler {
         if (nextClass === '.login-screen') {
             $('#username-input').trigger('focus');
         } else if (nextClass === '.map-section') {
-            this.mapProvider.showMap();
+            if (navigator.onLine) {
+                this.mapProvider.showMap();
+            } else {
+                alert("Sorry, but it seems that you are offline, map could not be loaded!");
+            }
         }
     }
 }

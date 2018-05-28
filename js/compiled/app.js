@@ -509,7 +509,11 @@ var HashChangeHandler = function () {
             if (nextClass === '.login-screen') {
                 $('#username-input').trigger('focus');
             } else if (nextClass === '.map-section') {
-                this.mapProvider.showMap();
+                if (navigator.onLine) {
+                    this.mapProvider.showMap();
+                } else {
+                    alert("Sorry, but it seems that you are offline, map could not be loaded!");
+                }
             }
         }
     }]);
@@ -1278,6 +1282,12 @@ function setUpNavBar(account, mapProvider) {
         setUpNavBar(account, mapProvider);
     });
 
+    var logIn = $('#log-in-link');
+    logIn.off().on('click', function (ev) {
+        ev.preventDefault();
+        window.location.hash = 'login-screen';
+    });
+
     var welcomeScreen = $('#welcome-screen-link');
     welcomeScreen.off().on('click', function (ev) {
         ev.preventDefault();
@@ -1294,10 +1304,14 @@ function setUpNavBar(account, mapProvider) {
         yourProfile.css('display', 'none');
         welcomeScreen.css('display', 'none');
         logout.css('display', 'none');
+
+        logIn.css('display', '');
     } else {
         yourProfile.css('display', '');
         welcomeScreen.css('display', '');
         logout.css('display', '');
+
+        logIn.css('display', 'none');
     }
 }
 

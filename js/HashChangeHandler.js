@@ -1,6 +1,7 @@
 export default class HashChangeHandler {
-    constructor(account) {
+    constructor(account, mapProvider) {
         this.account = account;
+        this.mapProvider = mapProvider;
         this.currentSection = '';
         this.history = [];
 
@@ -39,9 +40,12 @@ export default class HashChangeHandler {
         if (current !== '') {
             $(currentClass).removeClass('active');
         }
+
         $(nextClass).addClass('active');
         if (nextClass === '.login-screen') {
             $('#username-input').trigger('focus');
+        } else if (nextClass === '.map-section') {
+            this.mapProvider.showMap();
         }
     }
 }

@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setUpNavBar(account, map);
 
-    const hashChangeHandler = new HashChangeHandler(account);
+    const hashChangeHandler = new HashChangeHandler(account, map);
     $(window).on('hashchange', (ev) => hashChangeHandler.onHashChange(ev));
 
 });

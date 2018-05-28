@@ -458,10 +458,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HashChangeHandler = function () {
-    function HashChangeHandler(account) {
+    function HashChangeHandler(account, mapProvider) {
         _classCallCheck(this, HashChangeHandler);
 
         this.account = account;
+        this.mapProvider = mapProvider;
         this.currentSection = '';
         this.history = [];
 
@@ -503,9 +504,12 @@ var HashChangeHandler = function () {
             if (current !== '') {
                 $(currentClass).removeClass('active');
             }
+
             $(nextClass).addClass('active');
             if (nextClass === '.login-screen') {
                 $('#username-input').trigger('focus');
+            } else if (nextClass === '.map-section') {
+                this.mapProvider.showMap();
             }
         }
     }]);
@@ -532,13 +536,22 @@ var MapProvider = function () {
 
         this.concertsApi = concertsApi;
         this.map = null;
-        this.showMap(false);
+        this.currentPosition = null;
     }
 
     _createClass(MapProvider, [{
         key: 'showMap',
-        value: function showMap(useLocation) {
+        value: function showMap() {
             var _this = this;
+
+            if (this.map !== null) {
+                if (this.currentPosition !== null) {
+                    this.map.setCenter(this.currentPosition);
+                } else {
+                    this.initGeo(this.map);
+                }
+                return;
+            }
 
             var mapDiv = $("#concerts-map");
             var mapProp = {
@@ -548,7 +561,7 @@ var MapProvider = function () {
             };
             this.map = new google.maps.Map(mapDiv.get(0), mapProp);
 
-            if (useLocation) this.initGeo(this.map);
+            this.initGeo(this.map);
 
             var concerts = this.concertsApi.allConcerts;
             var places = concerts.map(function (x) {
@@ -625,6 +638,8 @@ var MapProvider = function () {
     }, {
         key: 'initGeo',
         value: function initGeo(map) {
+            var _this2 = this;
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var pos = {
@@ -644,6 +659,7 @@ var MapProvider = function () {
                     });
                     marker.setMap(map);
                     map.setCenter(pos);
+                    _this2.currentPosition = pos;
                 }, function () {
                     console.error("Could not find location.");
                 });
@@ -1242,7 +1258,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setUpNavBar(account, map);
 
-    var hashChangeHandler = new _HashChangeHandler2.default(account);
+    var hashChangeHandler = new _HashChangeHandler2.default(account, map);
     $(window).on('hashchange', function (ev) {
         return hashChangeHandler.onHashChange(ev);
     });

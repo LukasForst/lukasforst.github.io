@@ -2,10 +2,19 @@ export default class MapProvider {
     constructor(concertsApi) {
         this.concertsApi = concertsApi;
         this.map = null;
-        this.showMap(false);
+        this.currentPosition = null;
     }
 
-    showMap(useLocation) {
+    showMap() {
+        if(this.map !== null){
+            if(this.currentPosition !== null){
+                this.map.setCenter(this.currentPosition);
+            } else {
+                this.initGeo(this.map);
+            }
+            return;
+        }
+
         const mapDiv = $("#concerts-map");
         const mapProp = {
             //default center at city of Domazlice
@@ -14,7 +23,7 @@ export default class MapProvider {
         };
         this.map = new google.maps.Map(mapDiv.get(0), mapProp);
 
-        if(useLocation) this.initGeo(this.map);
+        this.initGeo(this.map);
 
         const concerts = this.concertsApi.allConcerts;
         const places = concerts.map(x => x.place).filter(((v, i, a) => a.indexOf(v) === i));
@@ -58,7 +67,7 @@ export default class MapProvider {
 
     initGeo(map) {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
+            navigator.geolocation.getCurrentPosition((position) => {
                 const pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -76,7 +85,8 @@ export default class MapProvider {
                 });
                 marker.setMap(map);
                 map.setCenter(pos);
-            }, function () {
+                this.currentPosition = pos;
+            }, () => {
                 console.error("Could not find location.");
             });
         } else {

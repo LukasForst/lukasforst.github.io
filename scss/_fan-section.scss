@@ -3,15 +3,20 @@
 .screen.fan-section {
   background-image: url("../img/fan-wall.jpg");
   justify-content: flex-start !important;
-  & .concert-list {
+
+  & .search-bar {
     display: block;
-    width: 40%;
+    width: 70%;
     height: 100%;
 
-    & .search-bar{
-      border: none;
-      text-align: center;
-    }
+    border: none;
+    text-align: center;
+  }
+
+  & .concert-list {
+    display: block;
+    width: 70%;
+    height: 100%;
 
     & li {
       cursor: pointer;
@@ -21,4 +26,15 @@
       background-color: $hover-fan-list-selection;
     }
   }
+
+  @media (min-width: 1100px) {
+    & .search-bar {
+      width: 40%;
+    }
+
+    & .concert-list {
+      width: 40%;
+    }
+  }
+
 }

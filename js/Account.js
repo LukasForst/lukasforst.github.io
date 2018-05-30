@@ -80,7 +80,7 @@ export default class Account {
     }
 
     isLoggedIn() {
-        return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED;
+        return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED && this.currentLogedUser.role !== AccountRoles.WRONG_USERNAME;
     }
 
     login(userName) {
@@ -88,7 +88,6 @@ export default class Account {
         let userRole;
         if (userName) {
             userRole = this.activeUserNames[userName];
-
             if (!userRole) {
                 userName = 'unauthorized';
                 userRole = AccountRoles.WRONG_USERNAME;

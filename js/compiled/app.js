@@ -110,7 +110,7 @@ var Account = function () {
     }, {
         key: "isLoggedIn",
         value: function isLoggedIn() {
-            return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED;
+            return this.currentLogedUser.role !== AccountRoles.UNAUTHORIZED && this.currentLogedUser.role !== AccountRoles.WRONG_USERNAME;
         }
     }, {
         key: "login",
@@ -119,7 +119,6 @@ var Account = function () {
             var userRole = void 0;
             if (userName) {
                 userRole = this.activeUserNames[userName];
-
                 if (!userRole) {
                     userName = 'unauthorized';
                     userRole = AccountRoles.WRONG_USERNAME;
@@ -777,9 +776,9 @@ var BandsApiMock = function () {
     _createClass(BandsApiMock, [{
         key: '_populate',
         value: function _populate() {
-            this.addBand(new _Band2.default(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
-            this.addBand(new _Band2.default(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
-            this.addBand(new _Band2.default(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
+            this._bands.push(new _Band2.default(1, 'Fousy', ['Lukas', 'Matin', 'Karel', 'Filip']));
+            this._bands.push(new _Band2.default(2, 'Poulicni Lampa', ['Lukas', 'Morys', 'Humus', 'Karel']));
+            this._bands.push(new _Band2.default(3, 'Rack Bites', ['Vojta', 'Karel', 'Maty']));
         }
     }]);
 
